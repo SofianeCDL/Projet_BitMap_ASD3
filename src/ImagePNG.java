@@ -82,7 +82,7 @@ public class ImagePNG
 
     /**************** À RETIRER DANS VOTRE PROJET *********************/
     /** Code de démonstration de l'usage de cette classe **/
-    public static void main( String[] args )
+    /*public static void main( String[] args )
     {
         try {
             if (args.length!=1) throw new IllegalArgumentException("Préciser le nom (et chemin) d'un unique fichier png en paramètre");
@@ -139,5 +139,5 @@ public class ImagePNG
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }
