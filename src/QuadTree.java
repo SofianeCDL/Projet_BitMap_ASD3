@@ -45,7 +45,13 @@ public class QuadTree {
         return color;
     }
 
-    //Create
+    /**
+     * @role :
+     * @param image
+     * @param x
+     * @param y
+     * @param sizeImage
+     */
     private void createQuadTree(ImagePNG image, int x, int y, int sizeImage) {
 
         if (sizeImage == 1) {
@@ -55,16 +61,16 @@ public class QuadTree {
         } else {
             int newSizeImage = sizeImage / 2;
 
-            int newXNW = 0;
-            int newYNW = 0;
+            int newXNW = x; //Coordinate of
+            int newYNW = y;
 
             int newXNE = x + newSizeImage;
-            int newYNE = 0;
+            int newYNE = y;
 
             int newXSE = x + newSizeImage;
             int newYSE = y + newSizeImage;
 
-            int newXSW = 0;
+            int newXSW = x;
             int newYSW = y + newSizeImage;
 
             this.northWest = new QuadTree(image, newXNW, newYNW, newSizeImage);
