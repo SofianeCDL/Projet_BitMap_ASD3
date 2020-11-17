@@ -6,11 +6,10 @@ public class QuadTree {
     private Color color;
     private boolean isLeaf;
 
-
+    //Constructor 1
     public QuadTree(ImagePNG image) {
         this.northWest = null;
         this.northEast = null;
-
         this.southEast = null;
         this.southWest = null;
 
@@ -18,14 +17,14 @@ public class QuadTree {
 
         this.color = null;
 
-        this.creatQuadTree(image, 0, 0, image.width());
+        this.createQuadTree(image, 0, 0, image.width());
 
     }
 
-    public QuadTree(ImagePNG image, int x, int y, int sizeImage) {
+    //Constructor 2
+    private QuadTree(ImagePNG image, int x, int y, int sizeImage) {
         this.northWest = null;
         this.northEast = null;
-
         this.southEast = null;
         this.southWest = null;
 
@@ -33,23 +32,26 @@ public class QuadTree {
 
         this.color = null;
 
-        this.creatQuadTree(image, x, y, sizeImage);
+        this.createQuadTree(image, x, y, sizeImage);
 
     }
 
+    //Methods
     public boolean isLeaf() {
         return isLeaf;
     }
-
+    //Accessors
     public Color getColor() {
         return color;
     }
 
-    public void creatQuadTree(ImagePNG image, int x, int y, int sizeImage) {
+    //Create
+    private void createQuadTree(ImagePNG image, int x, int y, int sizeImage) {
 
         if (sizeImage == 1) {
             this.color = image.getPixel(x, y);
-            this.isLeaf = true;
+            this.isLeaf = true; //We arrived to a leaf, so we stop the function
+
         } else {
             int newSizeImage = sizeImage / 2;
 
@@ -90,6 +92,7 @@ public class QuadTree {
         }
     }
 
+    //ToString
     public String toString() {
         String display = " ";
 
