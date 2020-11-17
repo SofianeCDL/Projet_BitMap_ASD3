@@ -46,7 +46,7 @@ public class QuadTree {
     }
 
     /**
-     * @role :
+     *
      * @param image
      * @param x
      * @param y
@@ -59,24 +59,25 @@ public class QuadTree {
             this.isLeaf = true; //We arrived to a leaf, so we stop the function
 
         } else {
-            int newSizeImage = sizeImage / 2;
+            int newSizeImage = sizeImage / 2; //Calculation of new size of childrens (North West, North East, South East and South West).
 
-            int newXNW = x; //Coordinate of
-            int newYNW = y;
+            int newXNW = x;                 //Coordinate X of cutting North West.
+            int newYNW = x;                 //Coordinate Y of cutting North West.
 
-            int newXNE = x + newSizeImage;
-            int newYNE = y;
+            int newXNE = x + newSizeImage;  //Coordinate X of cutting North East.
+            int newYNE = y;                 //Coordinate Y of cutting North East.
 
-            int newXSE = x + newSizeImage;
-            int newYSE = y + newSizeImage;
+            int newXSE = x + newSizeImage;  //Coordinate X of cutting South East.
+            int newYSE = y + newSizeImage;  //Coordinate Y of cutting South East.
 
-            int newXSW = x;
-            int newYSW = y + newSizeImage;
+            int newXSW = x;                 //Coordinate X of cutting South West.
+            int newYSW = y + newSizeImage;  //Coordinate Y of cutting South West.
 
-            this.northWest = new QuadTree(image, newXNW, newYNW, newSizeImage);
-            this.northEast = new QuadTree(image, newXNE, newYNE, newSizeImage);
-            this.southEast = new QuadTree(image, newXSE, newYSE, newSizeImage);
-            this.southWest = new QuadTree(image, newXSW, newYSW, newSizeImage);
+            this.northWest = new QuadTree(image, newXNW, newYNW, newSizeImage); //Recursive of cutting North West.
+            this.northEast = new QuadTree(image, newXNE, newYNE, newSizeImage); //Recursive of cutting North East.
+            this.southEast = new QuadTree(image, newXSE, newYSE, newSizeImage); //Recursive of cutting South East.
+            this.southWest = new QuadTree(image, newXSW, newYSW, newSizeImage); //Recursive of cutting South West.
+
 
             if (this.northWest.isLeaf && this.northEast.isLeaf && this.southEast.isLeaf && this.southWest.isLeaf) {
                 if (this.northWest.getColor().equals(this.northEast.getColor()) &&
