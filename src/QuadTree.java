@@ -98,7 +98,11 @@ public class QuadTree {
         }
     }
 
-    //ToString
+
+    /**
+     * @role :
+     * @return
+     */
     public String toString() {
         String display = " ";
 
