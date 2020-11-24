@@ -1,10 +1,15 @@
 import java.awt.*;
+import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 public class QuadTree {
 
     private QuadTree northWest, northEast, southEast, southWest;
     private Color color;
     private boolean isLeaf;
+
+    private ImagePNG image;
 
     //Constructor 1
     public QuadTree(ImagePNG image) {
@@ -16,6 +21,8 @@ public class QuadTree {
         this.isLeaf = false;
 
         this.color = null;
+
+        this.image = image;
 
         this.createQuadTree(image, 0, 0, image.width());
 
@@ -62,7 +69,7 @@ public class QuadTree {
             int newSizeImage = sizeImage / 2; //Calculation of new size of childrens (North West, North East, South East and South West).
 
             int newXNW = x;                 //Coordinate X of cutting North West.
-            int newYNW = x;                 //Coordinate Y of cutting North West.
+            int newYNW = y;                 //Coordinate Y of cutting North West.
 
             int newXNE = x + newSizeImage;  //Coordinate X of cutting North East.
             int newYNE = y;                 //Coordinate Y of cutting North East.
@@ -118,4 +125,28 @@ public class QuadTree {
             return display + " ";
         }
     }
+
+    public void savePNG(String filename) throws IOException {
+        ImagePNG imageClone = this.image.clone();
+
+        imageClone.save(filename);
+    }
+
+
+
+    public void saveTXT(String location) throws IOException {
+        String quadTreeTXT = this.toString();
+
+        try {
+            BufferedWriter write = new BufferedWriter(new FileWriter(location));
+
+            write.write(quadTreeTXT);
+
+            write.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
