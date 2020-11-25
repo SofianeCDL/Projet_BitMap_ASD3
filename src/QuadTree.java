@@ -129,7 +129,53 @@ public class QuadTree {
     public void savePNG(String filename) throws IOException {
         ImagePNG imageClone = this.image.clone();
 
+        compressionPNG(imageClone, this, 0, 0, image.width());
+
         imageClone.save(filename);
+    }
+
+    public void compressionPNG(ImagePNG image, QuadTree arbre, int x, int y, int sizeImage) {
+        if (arbre.isLeaf) {
+            System.out.println("X = " + x + " / Y = " + y + " compression block" );
+            compressionBlockPNG(image, x, y, sizeImage, arbre.getColor());
+        } else{
+
+            int newSizeImage = sizeImage / 2; //Calculation of new size of childrens (North West, North East, South East and South West).
+
+            int newXNE = x + newSizeImage;  //Coordinate X of cutting North East.
+
+            int newXSE = x + newSizeImage;  //Coordinate X of cutting South East.
+            int newYSE = y + newSizeImage;  //Coordinate Y of cutting South East.
+
+            int newYSW = y + newSizeImage;  //Coordinate Y of cutting South West.
+
+            compressionPNG(image, this.northWest, x, y, newSizeImage);
+            compressionPNG(image, this.northEast, newXNE, y, newSizeImage);
+            compressionPNG(image, this.southEast, newXSE, newYSE, newSizeImage);
+            compressionPNG(image, this.southWest, x, newYSW, newSizeImage);
+        }
+
+    }
+
+    public void compressionBlockPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
+
+        if (x == x + sizeImage) {
+            //image.setPixel(x, y, new Color(0,0,0));
+
+            //compressionBlockPNG(image, x, y + 1, sizeImage, maxXY, rgb);
+        } else if (y == y + sizeImage) {
+            //image.setPixel(x, y, new Color(0,0,0));
+
+            //compressionBlockPNG(image, x + 1, y, sizeImage, maxXY, rgb);
+        } else {
+            System.out.println("X = " + x + " / Y = " + y + " block" );
+
+            image.setPixel(x, y, new Color(0, 0, 0));
+
+            compressionBlockPNG(image, x + 1, y, sizeImage, rgb);
+            compressionBlockPNG(image, x, y + 1, sizeImage, rgb);
+
+        }
     }
 
 

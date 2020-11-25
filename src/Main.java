@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        ImagePNG i = new ImagePNG("pngs/16.png");
+        ImagePNG i = new ImagePNG("pngs/2.png");
         QuadTree t = new QuadTree(i);
         System.out.println(t.toString());
 
