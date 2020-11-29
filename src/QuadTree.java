@@ -169,10 +169,11 @@ public class QuadTree {
      * @return average color.
      */
     public Color colorimetricAverage() {
-        int Rm = this.northWest.getColor().getRed()   + this.northEast.getColor().getRed()   + this.southEast.getColor().getRed()   + this.southWest.getColor().getRed(); //Average red color between north east, north west, south west and south east.
-        int Gm = this.northWest.getColor().getGreen() + this.northEast.getColor().getGreen() + this.southEast.getColor().getGreen() + this.southWest.getColor().getGreen(); //Average green color between north east, north west, south west and south east.
-        int Bm = this.northWest.getColor().getBlue()  + this.northEast.getColor().getBlue()  + this.southEast.getColor().getBlue()  + this.southWest.getColor().getBlue(); //Average blue color between north east, north west, south west and south east.
+        int Rm = (this.northWest.getColor().getRed()   + this.northEast.getColor().getRed()   + this.southEast.getColor().getRed()   + this.southWest.getColor().getRed()) / 4; //Average red color between north east, north west, south west and south east.
+        int Gm = (this.northWest.getColor().getGreen() + this.northEast.getColor().getGreen() + this.southEast.getColor().getGreen() + this.southWest.getColor().getGreen()) / 4; //Average green color between north east, north west, south west and south east.
+        int Bm = (this.northWest.getColor().getBlue()  + this.northEast.getColor().getBlue()  + this.southEast.getColor().getBlue()  + this.southWest.getColor().getBlue()) / 4; //Average blue color between north east, north west, south west and south east.
 
+        System.out.println("R = " + Rm + " G = " + Gm + " B = " + Bm);
         return new Color(Rm, Gm, Bm);
 
     }
@@ -183,9 +184,9 @@ public class QuadTree {
      *  @return calcule.
      */
     public int colorimetricDifference(Color average) {
-        return (int) Math.sqrt((this.color.getRed() - average.getRed()) * (this.color.getRed() - average.getRed()) +
+        return (int) Math.sqrt(((this.color.getRed() - average.getRed()) * (this.color.getRed() - average.getRed()) +
                 (this.color.getGreen() - average.getGreen()) * (this.color.getGreen() - average.getGreen()) +
-                (this.color.getBlue() - average.getBlue()) * (this.color.getBlue() - average.getBlue()));
+                (this.color.getBlue() - average.getBlue()) * (this.color.getBlue() - average.getBlue())) / 3);
     }
 
 
