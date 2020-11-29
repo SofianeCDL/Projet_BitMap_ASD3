@@ -227,10 +227,10 @@ public class QuadTree {
                 }
 
             } else {
-                compressDelta(delta, tree.northWest);
-                compressDelta(delta, tree.northEast);
-                compressDelta(delta, tree.southEast);
-                compressDelta(delta, tree.southWest);
+                compressDelta(delta, tree.getNorthWest());
+                compressDelta(delta, tree.getNorthEast());
+                compressDelta(delta, tree.getSouthEast());
+                compressDelta(delta, tree.getSouthWest());
            }
         }
     }
@@ -239,14 +239,14 @@ public class QuadTree {
     public void savePNG(String filename) throws IOException {
         ImagePNG imageClone = this.image.clone();
 
-        compressionPNG(imageClone, this, 0, 0, image.width());
+        System.out.println(imageClone.width());
+        compressionPNG(imageClone, this, 0, 0, imageClone.width());
 
         imageClone.save(filename);
     }
 
     public void compressionPNG(ImagePNG image, QuadTree arbre, int x, int y, int sizeImage) {
         if (arbre.isLeaf()) {
-            System.out.println("X = " + x + " / Y = " + y + " compression block" );
             compressionBlockPNG(image, x, y, sizeImage, arbre.getColor());
         } else {
             int newSizeImage = sizeImage / 2; //Calculation of new size of childrens (North West, North East, South East and South West).
@@ -258,17 +258,17 @@ public class QuadTree {
 
             int newYSW = y + newSizeImage;  //Coordinate Y of cutting South West.
 
-            compressionPNG(image, this.northWest, x, y, newSizeImage);
-            compressionPNG(image, this.northEast, newXNE, y, newSizeImage);
-            compressionPNG(image, this.southEast, newXSE, newYSE, newSizeImage);
-            compressionPNG(image, this.southWest, x, newYSW, newSizeImage);
+            compressionPNG(image, arbre.getNorthWest(), x, y, newSizeImage);
+            compressionPNG(image, arbre.getNorthEast(), newXNE, y, newSizeImage);
+            compressionPNG(image, arbre.getSouthEast(), newXSE, newYSE, newSizeImage);
+            compressionPNG(image, arbre.getSouthWest(), x, newYSW, newSizeImage);
         }
     }
 
     ///TODO CHANGER NOM FONCTION
     public void compressionBlockPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
 
-        if (x == x + sizeImage) {
+        /*if (x == x + sizeImage) {
             //image.setPixel(x, y, new Color(0,0,0));
             //compressionBlockPNG(image, x, y + 1, sizeImage, maxXY, rgb);
         } else if (y == y + sizeImage) {
@@ -281,6 +281,12 @@ public class QuadTree {
 
             compressionBlockPNG(image, x + 1, y, sizeImage, rgb);
             compressionBlockPNG(image, x, y + 1, sizeImage, rgb);
+        }*/
+
+        for (int i = x ; i < x + sizeImage ; ++i) {
+            for (int j = y ; j < y + sizeImage ; j++) {
+                image.setPixel(i, j, rgb);
+            }
         }
     }
 
