@@ -173,7 +173,6 @@ public class QuadTree {
         int Gm = (this.northWest.getColor().getGreen() + this.northEast.getColor().getGreen() + this.southEast.getColor().getGreen() + this.southWest.getColor().getGreen()) / 4; //Average green color between north east, north west, south west and south east.
         int Bm = (this.northWest.getColor().getBlue()  + this.northEast.getColor().getBlue()  + this.southEast.getColor().getBlue()  + this.southWest.getColor().getBlue()) / 4; //Average blue color between north east, north west, south west and south east.
 
-        System.out.println("R = " + Rm + " G = " + Gm + " B = " + Bm);
         return new Color(Rm, Gm, Bm);
 
     }
@@ -228,10 +227,10 @@ public class QuadTree {
                 }
 
             } else {
-                compressDelta(delta, this.northEast);
-                compressDelta(delta, this.northEast);
-                compressDelta(delta, this.northEast);
-                compressDelta(delta, this.northEast);
+                compressDelta(delta, tree.northWest);
+                compressDelta(delta, tree.northEast);
+                compressDelta(delta, tree.southEast);
+                compressDelta(delta, tree.southWest);
            }
         }
     }
