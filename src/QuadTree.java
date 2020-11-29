@@ -225,16 +225,16 @@ public class QuadTree {
 
                     tree.setLeaf(true);
                 }
+
             } else {
                 compressDelta(delta, this.northEast);
                 compressDelta(delta, this.northEast);
                 compressDelta(delta, this.northEast);
                 compressDelta(delta, this.northEast);
-
-            }
+           }
         }
-
     }
+
 
     public void savePNG(String filename) throws IOException {
         ImagePNG imageClone = this.image.clone();
