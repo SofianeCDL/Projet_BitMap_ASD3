@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.io.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class QuadTree {
 
@@ -200,6 +202,21 @@ public class QuadTree {
         return Math.max(maxNorth, maxSouth);
     }
 
+    public Set<Integer> growthColorimetricDifference() {
+        Color average = this.colorimetricAverage();
+
+        Set<Integer> treeSet = new TreeSet<Integer>();
+
+        treeSet.add(this.northWest.colorimetricDifference(average));
+        treeSet.add(this.northEast.colorimetricDifference(average));
+        treeSet.add(this.southEast.colorimetricDifference(average));
+        treeSet.add(this.southWest.colorimetricDifference(average));
+
+        return treeSet;
+
+
+    }
+
     /** @role :
      *  @param delta
      *  @param tree
@@ -240,50 +257,57 @@ public class QuadTree {
      * @param phi
      * @param tree
      */
-    public int compressPhi(int phi, QuadTree tree, int numberLeaf) {
+    /*public int compressPhi(int phi, QuadTree tree, int numberLeaf) {
 
-        if (tree.isLeaf()) {
+        if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf() && phi < numberLeaf) { //If all of sons are leaf and phi < number of leaf
+
+                Color newColor =  tree.colorimetricAverage();
+
+
+                tree.setNorthWest(null);
+                tree.setNorthEast(null);
+                tree.setSouthWest(null);
+                tree.setSouthEast(null);
+
+
+                tree.setLeaf(true);
+
+                return numberLeaf - 3;
+
+            return tree.colorimetricDifference(newColor);
+        } else {
+            int CDNorthWest = tree.compressPhi(phi, tree.getNorthWest(), numberLeaf);
+            int CDNorthEast = tree.compressPhi(phi, tree.getNorthEast(), numberLeaf);
+            int CDSouthEast = tree.compressPhi(phi, tree.getSouthEast(), numberLeaf);
+            int CDSouthWest = tree.compressPhi(phi, tree.getSouthWest(), numberLeaf);
+
+            if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf() && phi < numberLeaf) { //If all of sons are leaf and phi < number of leaf
+
+                Color newColor =  tree.colorimetricAverage();
+
+                tree.setColor(newColor);
+
+                tree.setNorthWest(null);
+                tree.setNorthEast(null);
+                tree.setSouthWest(null);
+                tree.setSouthEast(null);
+
+
+                tree.setLeaf(true);
+
+                return numberLeaf - 3;
+            }
+
             return numberLeaf;
 
-        } else if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf() && phi < numberLeaf) { //If all of sons are leaf and phi < number of leaf
 
-            numberLeaf -= 3;
-            int[] growthTable = tree.growthColorimetricDifference();
-
-            int cpt = 0;
-            while ( phi < numberLeaf || cpt < 4){
-
-            }
-
-        } else {
         }
+    }*/
+
+    public int compressPhi(int phi, QuadTree tree, int numberLeaf) {
+
+        if ()
     }
-
-
-    private int[] growthColorimetricDifference() {
-
-        int[] growthTable = new int[4];
-        Color newColor =  this.colorimetricAverage();
-
-        growthTable[0] = this.getNorthWest().colorimetricDifference(newColor);
-        growthTable[1] = this.getNorthWest().colorimetricDifference(newColor);
-        growthTable[2] = this.getNorthWest().colorimetricDifference(newColor);
-        growthTable[3] = this.getNorthWest().colorimetricDifference(newColor);
-
-        for ( int i = 0 ; i <= 3 ; i++ ){
-
-            if(growthTable[i] > growthTable[i+1]){
-                int value = growthTable[i];
-
-                growthTable[i] = growthTable[i+1];
-                growthTable[i+1]= growthTable[i];
-            }
-        }
-        return growthTable;
-    }
-
-
-
 
 
         /** @role : This function count the number of leaves in the tree
@@ -292,22 +316,21 @@ public class QuadTree {
          */
     public int numberNodes(QuadTree tree){
 
-        if(tree != null){
-            if ( tree.isLeaf() ){
+        if(tree != null) {
+            if (tree.isLeaf()) {
                 return 1;
+            } else {
+                return (numberNodes(tree.getNorthWest()) + numberNodes(tree.getNorthEast()) + numberNodes(tree.getSouthWest()) + numberNodes(tree.getSouthEast()));
             }
-            return ( numberNodes(tree.getNorthWest()) + numberNodes(tree.getNorthEast()) + numberNodes(getSouthWest()) + numberNodes(tree.getSouthEast()));
-        } else {
-            return 0;
         }
+
+        return 0;
     }
 
 
 
     public void savePNG(String filename) throws IOException {
         ImagePNG imageClone = this.image.clone();
-
-        System.out.println(imageClone.width());
         compressionPNG(imageClone, this, 0, 0, imageClone.width());
 
         imageClone.save(filename);
