@@ -1,7 +1,5 @@
 import java.awt.*;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 public class QuadTree {
 
@@ -126,9 +124,29 @@ public class QuadTree {
         this.color = color;
     }
 
+    public void setNorthWest(QuadTree northWest) {
+        this.northWest = northWest;
+    }
+
+    public void setNorthEast(QuadTree northEast) {
+        this.northEast = northEast;
+    }
+
+    public void setSouthEast(QuadTree southEast) {
+        this.southEast = southEast;
+    }
+
+    public void setSouthWest(QuadTree southWest) {
+        this.southWest = southWest;
+    }
+
+    public void setLeaf(boolean leaf) {
+        this.leaf = leaf;
+    }
+
     /**
      * @role :
-     * @return
+     *  @return
      */
     public String toString() {
         String display = " ";
@@ -145,23 +163,24 @@ public class QuadTree {
         }
     }
 
+
     /**
      * Average color between north east, north west, south west and south east.
      * @return average color.
      */
     public Color colorimetricAverage() {
-        int Rm = this.northEast.getColor().getRed() + this.northWest.getColor().getRed() + this.southWest.getColor().getRed() + this.southEast.getColor().getRed(); //Average red color between north east, north west, south west and south east.
-        int Gm = this.northEast.getColor().getGreen() + this.northWest.getColor().getGreen() + this.southWest.getColor().getGreen() + this.southEast.getColor().getGreen(); //Average green color between north east, north west, south west and south east.
-        int Bm = this.northEast.getColor().getBlue() + this.northWest.getColor().getBlue() + this.southWest.getColor().getBlue() + this.southEast.getColor().getBlue(); //Average blue color between north east, north west, south west and south east.
+        int Rm = this.northWest.getColor().getRed()   + this.northEast.getColor().getRed()   + this.southEast.getColor().getRed()   + this.southWest.getColor().getRed(); //Average red color between north east, north west, south west and south east.
+        int Gm = this.northWest.getColor().getGreen() + this.northEast.getColor().getGreen() + this.southEast.getColor().getGreen() + this.southWest.getColor().getGreen(); //Average green color between north east, north west, south west and south east.
+        int Bm = this.northWest.getColor().getBlue()  + this.northEast.getColor().getBlue()  + this.southEast.getColor().getBlue()  + this.southWest.getColor().getBlue(); //Average blue color between north east, north west, south west and south east.
 
         return new Color(Rm, Gm, Bm);
 
     }
 
-    /**
-     * calculate the colorimetric difference.
-     * @param average average color.
-     * @return calcule.
+    //----------------------------------------------------COMPRESS DELTA
+    /** @role : Calculate the colorimetric difference.
+     *  @param average average color.
+     *  @return calcule.
      */
     public int colorimetricDifference(Color average) {
         return (int) Math.sqrt((this.color.getRed() - average.getRed()) * (this.color.getRed() - average.getRed()) +
@@ -169,42 +188,48 @@ public class QuadTree {
                 (this.color.getBlue() - average.getBlue()) * (this.color.getBlue() - average.getBlue()));
     }
 
-    /**
-     * choose the maximum direction between the 4 directions.
-     * @return //choose the maximum direction between south and north.
+
+    /** @role : choose the maximum direction between the 4 directions.
+     *  @return //choose the maximum direction between south and north.
      */
     public int maxColorimetricDifference() {
         Color average = this.colorimetricAverage();
-        int maxNorth = Math.max(this.northEast.colorimetricDifference(average), this.northWest.colorimetricDifference(average)); //choose the maximum direction between north east and north west.
-        int maxSouth = Math.max(this.southEast.colorimetricDifference(average), this.southWest.colorimetricDifference(average)); //choose the maximum direction between south east and south west.
+        int maxNorth = Math.max(this.northWest.colorimetricDifference(average), this.northEast.colorimetricDifference(average)); //choose the maximum direction between north east and north west.
+        int maxSouth = Math.max( this.southWest.colorimetricDifference(average), this.southEast.colorimetricDifference(average)); //choose the maximum direction between south east and south west.
 
         return Math.max(maxNorth, maxSouth);
     }
 
-    /**
-     *
-     * @param delta
-     * @param tree
+    /** @role :
+     *  @param delta
+     *  @param tree
      */
     public void compressDelta(int delta, QuadTree tree) {
 
         if (tree.isLeaf()) {
             return;
         } else {
-            if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf()) {
+            if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf()) { //If all of sons are leaf
+
                 int colorimetricDifference = tree.maxColorimetricDifference();
 
                 if (colorimetricDifference <= delta) {
-                    this.color = new Color(colorimetricDifference);
+                    Color newColor =  tree.colorimetricAverage();
+                    tree.setColor(newColor);
 
-                    this.northEast = null;
-                    this.northWest = null;
-                    this.southWest = null;
-                    this.southEast = null;
+                    tree.setNorthWest(null);//All of sons becomes null
+                    tree.setNorthEast(null);
+                    tree.setSouthWest(null);
+                    tree.setSouthEast(null);
 
-                    this.leaf = leaf;
+
+                    tree.setLeaf(true);
                 }
             } else {
+                compressDelta(delta, this.northEast);
+                compressDelta(delta, this.northEast);
+                compressDelta(delta, this.northEast);
+                compressDelta(delta, this.northEast);
 
             }
         }
@@ -240,6 +265,7 @@ public class QuadTree {
         }
     }
 
+    ///TODO CHANGER NOM FONCTION
     public void compressionBlockPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
 
         if (x == x + sizeImage) {
