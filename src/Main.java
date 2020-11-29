@@ -10,7 +10,7 @@ public class Main {
 
         t.saveTXT("SaveTXT/test.txt");
 
-        t.savePNG("SavePNG/test1.png");
+        //t.savePNG("SavePNG/test1.png");
 
 
 
