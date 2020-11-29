@@ -240,54 +240,56 @@ public class QuadTree {
      * @param phi
      * @param tree
      */
-    public void compressPhi(int phi, QuadTree tree, int numberLeaf) {
-
-
-            if (tree.isLeaf()) {
-                return;
-
-            } else if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf() && phi < numberLeaf ) { //If all of sons are leaf and phi < number of leaf
-
-                    Color newColor =  tree.colorimetricAverage();
-                    tree.setColor(newColor);
-
-                    tree.setNorthWest(null);//All of sons becomes null
-                    tree.setNorthEast(null);
-                    tree.setSouthWest(null);
-                    tree.setSouthEast(null);
-
-                    tree.setLeaf(true);
-                    numberLeaf-=3;
-
-            } else {
-
-            }
-    }
-
-    public int treeColorimetricDifference( QuadTree tree ) {
+    public int compressPhi(int phi, QuadTree tree, int numberLeaf) {
 
         if (tree.isLeaf()) {
-            return 0;
+            return numberLeaf;
 
-        } else if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf()) {
+        } else if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf() && phi < numberLeaf) { //If all of sons are leaf and phi < number of leaf
 
-            return tree.colorimetricDifference(tree.colorimetricAverage());
+            numberLeaf -= 3;
+            int[] growthTable = tree.growthColorimetricDifference();
+
+            int cpt = 0;
+            while ( phi < numberLeaf || cpt < 4){
+
+            }
 
         } else {
-
-            tree.treeColorimetricDifference(tree.getNorthWest());
-            tree.treeColorimetricDifference(tree.getNorthEast());
-            tree.treeColorimetricDifference(tree.getSouthWest());
-            tree.treeColorimetricDifference(tree.getSouthEast());
-
         }
     }
 
 
-    /** @role : This function count the number of leaves in the tree
-     * @param tree
-     * @return
-     */
+    private int[] growthColorimetricDifference() {
+
+        int[] growthTable = new int[4];
+        Color newColor =  this.colorimetricAverage();
+
+        growthTable[0] = this.getNorthWest().colorimetricDifference(newColor);
+        growthTable[1] = this.getNorthWest().colorimetricDifference(newColor);
+        growthTable[2] = this.getNorthWest().colorimetricDifference(newColor);
+        growthTable[3] = this.getNorthWest().colorimetricDifference(newColor);
+
+        for ( int i = 0 ; i <= 3 ; i++ ){
+
+            if(growthTable[i] > growthTable[i+1]){
+                int value = growthTable[i];
+
+                growthTable[i] = growthTable[i+1];
+                growthTable[i+1]= growthTable[i];
+            }
+        }
+        return growthTable;
+    }
+
+
+
+
+
+        /** @role : This function count the number of leaves in the tree
+         * @param tree
+         * @return
+         */
     public int numberNodes(QuadTree tree){
 
         if(tree != null){
