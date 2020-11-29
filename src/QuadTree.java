@@ -235,6 +235,72 @@ public class QuadTree {
         }
     }
 
+    //----------------------------------------------------COMPRESS PHI
+    /** @role :
+     * @param phi
+     * @param tree
+     */
+    public void compressPhi(int phi, QuadTree tree, int numberLeaf) {
+
+
+            if (tree.isLeaf()) {
+                return;
+
+            } else if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf() && phi < numberLeaf ) { //If all of sons are leaf and phi < number of leaf
+
+                    Color newColor =  tree.colorimetricAverage();
+                    tree.setColor(newColor);
+
+                    tree.setNorthWest(null);//All of sons becomes null
+                    tree.setNorthEast(null);
+                    tree.setSouthWest(null);
+                    tree.setSouthEast(null);
+
+                    tree.setLeaf(true);
+                    numberLeaf-=3;
+
+            } else {
+
+            }
+    }
+
+    public int treeColorimetricDifference( QuadTree tree ) {
+
+        if (tree.isLeaf()) {
+            return 0;
+
+        } else if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf()) {
+
+            return tree.colorimetricDifference(tree.colorimetricAverage());
+
+        } else {
+
+            tree.treeColorimetricDifference(tree.getNorthWest());
+            tree.treeColorimetricDifference(tree.getNorthEast());
+            tree.treeColorimetricDifference(tree.getSouthWest());
+            tree.treeColorimetricDifference(tree.getSouthEast());
+
+        }
+    }
+
+
+    /** @role : This function count the number of leaves in the tree
+     * @param tree
+     * @return
+     */
+    public int numberNodes(QuadTree tree){
+
+        if(tree != null){
+            if ( tree.isLeaf() ){
+                return 1;
+            }
+            return ( numberNodes(tree.getNorthWest()) + numberNodes(tree.getNorthEast()) + numberNodes(getSouthWest()) + numberNodes(tree.getSouthEast()));
+        } else {
+            return 0;
+        }
+    }
+
+
 
     public void savePNG(String filename) throws IOException {
         ImagePNG imageClone = this.image.clone();
