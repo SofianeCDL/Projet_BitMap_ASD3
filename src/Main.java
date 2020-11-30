@@ -3,8 +3,13 @@ import java.util.Scanner;
 
 public class Main {
 
+    //Variable
+    QuadTree tree, deltaTree, phiTree;
+    boolean b = false;
+
+
     //---------------------------------------- TEXT DISPLAY
-    private static String welcome() throws IOException {
+    private static String welcome() {
         String str = ("Bienvenue dans notre outil de compression d'image !\n"
                 + "→ Nous vous invitons à presser une touche du clavier pour acceder au menu. Nous vous souhaitons une bonne découverte ! ");
 
@@ -24,36 +29,59 @@ public class Main {
                 + "\t 4. Sauvegarder le quadtree dans un fichier PNG.\n"
                 + "\t 5. Sauvegarder la représentation textuelle du quadtree dans un fichier TXT.\n"
                 + "\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n"
-
-                + "\t → A présent, choissisez quel option vous intérresse.");
+                + "\t → A présent, choissisez quelle option vous intérresse.");
     }
 
     //---------------------------------------- Interactive mode
+    //TODO coir si on eut sans appuyer sur la touche entrer selectionner une option !!
     private static void choiceOption(){
 
         //switch
     }
+
+    //---------------------------------------- image
+    private static ImagePNG loadImage(String str) throws IOException {
+        String begin = "pngs/";
+        String end = ".png";
+        ImagePNG i = new ImagePNG(begin + str + end); //CHARGE UN IMAGE PNG
+        return i;
+    }
+
+    private static void createDeltaFile(String name, ImagePNG i){
+        deltaTree = new QuadTree(i);
+        deltaTree.compressDelta(75, deltaTree);
+
+
+    }
+
+
+    private static void createPhiFile(String name){
+        phiTree.compressPhi(200000, phiTree, phiTree.numberNodes(phiTree));
+
+    }
+
     //------------------------------------------------------------ MAIN
     public static void main(String[] args) throws Exception {
 
-        //Variable
-        QuadTree tree, deltaTree, PhiTree;
-        boolean b = false;
 
         //Begin
         if ( args.length == 0 ) { //If we are in interactive mode
             System.out.println(welcome());
-            ///// CHOICE faire fonction
-            loadImage(b);
+            ///// TODO CHOICE faire fonction
+            //loadImage(b);
 
         } else if ( args.length == 3 ) { //If we are in noninteractive mode
             //TODO EXECUTION NON-MACHIN CHOSE
+            System.out.println("Chargement de l'image...");
+            ImagePNG i = loadImage(args[0]);
 
-            //Charge l'image en png avec fonction
-            //Création des fichier delta et phi avec les bo nom
-            //Creation fichier txt
 
-            //Affichage comparatif entre les deux !! faire fonction
+
+            //TODO Charge l'image en png avec fonction
+            //TODO Création des fichier delta et phi avec les bo noms
+            //TODO Creation fichier txt
+
+            //TODO Affichage comparatif entre les deux !! faire fonction
 
         } else {
             throw new Exception("Le nombre d'argument n'est pas le bon ! ");
@@ -87,7 +115,6 @@ public class Main {
     public static void loadImage(boolean b) throws IOException {
         Scanner scan = new Scanner(System.in);
 
-
         System.out.println("Veuillez entrer le nom du fichier à tester : ");///TODO EXPCETION
         try {
             String str = scan.next();
@@ -119,6 +146,4 @@ public class Main {
 
 
     }
-
-
 }
