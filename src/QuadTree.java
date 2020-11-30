@@ -55,12 +55,11 @@ public class QuadTree {
         return color;
     }
 
-    /**
-     *
-     * @param image
-     * @param x
-     * @param y
-     * @param sizeImage
+    /** @role :
+     *  @param image
+     *  @param x
+     *  @param y
+     *  @param sizeImage
      */
     private void createQuadTree(ImagePNG image, int x, int y, int sizeImage) {
 
