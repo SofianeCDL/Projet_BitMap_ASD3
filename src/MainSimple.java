@@ -7,11 +7,11 @@ public class MainSimple {
 
         QuadTree t = new QuadTree(i);
 
-        t.compressDelta(1, t);
+        t.compressDelta(255, t);
 
         t.savePNG("SavePNG/test1.png");
 
-        System.out.println(t.EQM());
+        System.out.println(Main.displayEQM(t));
 
     }
 }

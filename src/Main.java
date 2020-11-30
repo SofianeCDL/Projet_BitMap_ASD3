@@ -147,11 +147,14 @@ public class Main {
             if(b == false ){
                 loadImage(b);
             }
-
-
         }
+    }
 
+    public static String displayEQM(QuadTree tree) throws IOException {
+        String displayEQM = "";
 
+        displayEQM = "\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%";
 
+        return displayEQM;
     }
 }
