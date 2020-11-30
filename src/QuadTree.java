@@ -292,8 +292,6 @@ public class QuadTree {
 
         listLeaf.sort(comparator); //Sort automatically listLeaf.
 
-
-
         while (phi < numberLeaf) {
             if (listLeaf.size() == 0) {
                 listLeaf = listNewLeaf; //If listLeaf is empty, we change with the new list of leafs.
@@ -322,7 +320,7 @@ public class QuadTree {
      * @param tree
      * @param list list of leafs.
      */
-    public void compressPhiTri( QuadTree tree, ArrayList<QuadTree> list) {
+    private void compressPhiTri( QuadTree tree, ArrayList<QuadTree> list) {
         if (tree != null) {
             if (tree.verification()) {
                 list.add(tree);

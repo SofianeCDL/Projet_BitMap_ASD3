@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
 
     //Variable
-    QuadTree tree, deltaTree, phiTree;
+    //QuadTree tree, deltaTree, phiTree;
     boolean b = false;
 
 
@@ -47,16 +47,22 @@ public class Main {
         return i;
     }
 
-    private static void createDeltaFile(String name, ImagePNG i){
-        deltaTree = new QuadTree(i);
-        deltaTree.compressDelta(75, deltaTree);
+    ///TODO BLOQUER DELTA ENTRE 0 ET 255 !!!!!!!!!!!!!!!!!!!!!!!!!
+    private static void createDeltaFile(int delta, String name, ImagePNG i) throws IOException {
+        QuadTree deltaTree = new QuadTree(i);
+        deltaTree.compressDelta(delta, deltaTree);
 
-
+        deltaTree.saveTXT("SaveTXT/" + name + ".txt");
+        deltaTree.savePNG("SavePNG/" + name + ".png");
     }
 
+    ///TODO PHI > 0 !!!!!!!!!!!!!!!!!!!!!!!!!
+    private static void createPhiFile(int phi, String name, ImagePNG i) throws IOException {
+        QuadTree phiTree = new QuadTree(i);
+        phiTree.compressPhi(phiTree, phi);
 
-    private static void createPhiFile(String name){
-        phiTree.compressPhi(200000, phiTree, phiTree.numberNodes(phiTree));
+        phiTree.saveTXT("SaveTXT/" + name + ".txt");
+        phiTree.savePNG("SavePNG/" + name + ".png");
 
     }
 
@@ -71,15 +77,18 @@ public class Main {
             //loadImage(b);
 
         } else if ( args.length == 3 ) { //If we are in noninteractive mode
-            //TODO EXECUTION NON-MACHIN CHOSE
+
             System.out.println("Chargement de l'image...");
             ImagePNG i = loadImage(args[0]);
 
+            System.out.println("\nCréation des fichiers ");
+            int delta = Integer.parseInt(args[1]);
+            createDeltaFile(delta, args[0], i ); //creation of delta PNG and text files
 
 
-            //TODO Charge l'image en png avec fonction
-            //TODO Création des fichier delta et phi avec les bo noms
-            //TODO Creation fichier txt
+            int phi = Integer.parseInt(args[2]);
+            createPhiFile( phi, args[0], i); //creation of phi PNG and text files
+
 
             //TODO Affichage comparatif entre les deux !! faire fonction
 
