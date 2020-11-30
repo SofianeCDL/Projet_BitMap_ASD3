@@ -51,11 +51,11 @@ public class QuadTree {
 
     }
 
-    /** @role :
-     *  @param image
-     *  @param x
-     *  @param y
-     *  @param sizeImage
+    /** @role : Create the complete tree of the image.
+     *  @param image image in 2^N format, with N = number of pixels per side.
+     *  @param x position x of pixel.
+     *  @param y position y of pixel.
+     *  @param sizeImage number pixel per side.
      */
     private void createQuadTree(ImagePNG image, int x, int y, int sizeImage) {
 
@@ -168,9 +168,8 @@ public class QuadTree {
 
     // ----------------------------------------------- TO STRING -----------------------------------------------
 
-    /**
-     * @role :
-     *  @return
+    /** @role : Display tree in docs format.
+     *  @return display in format String.
      */
     public String toString() {
         String display = " ";

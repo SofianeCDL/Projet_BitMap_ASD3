@@ -7,7 +7,7 @@ public class MainSimple {
 
         QuadTree t = new QuadTree(i);
 
-        t.compressDelta(255, t);
+        t.compressDelta(255);
 
         t.savePNG("SavePNG/test1.png");
 
