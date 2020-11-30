@@ -50,19 +50,19 @@ public class Main {
     ///TODO BLOQUER DELTA ENTRE 0 ET 255 !!!!!!!!!!!!!!!!!!!!!!!!!
     private static void createDeltaFile(int delta, String name, ImagePNG i) throws IOException {
         QuadTree deltaTree = new QuadTree(i);
-        deltaTree.compressDelta(delta, deltaTree);
+        deltaTree.compressDelta(delta);
 
-        deltaTree.saveTXT("SaveTXT/" + name + ".txt");
-        deltaTree.savePNG("SavePNG/" + name + ".png");
+        deltaTree.saveTXT("SaveTXT/" + name + "-" + delta + ".txt");
+        deltaTree.savePNG("SavePNG/" + name + "-" + delta + ".png");
     }
 
     ///TODO PHI > 0 !!!!!!!!!!!!!!!!!!!!!!!!!
     private static void createPhiFile(int phi, String name, ImagePNG i) throws IOException {
         QuadTree phiTree = new QuadTree(i);
-        phiTree.compressPhi(phiTree, phi);
+        phiTree.compressPhi(phi);
 
-        phiTree.saveTXT("SaveTXT/" + name + ".txt");
-        phiTree.savePNG("SavePNG/" + name + ".png");
+        phiTree.saveTXT("SaveTXT/" + name + "-" + phi + ".txt");
+        phiTree.savePNG("SavePNG/" + name + "-" + phi + ".png");
 
     }
 
@@ -72,20 +72,24 @@ public class Main {
         //Begin
         if ( args.length == 0 ) { //If we are in interactive mode
             System.out.println(welcome());
+
             ///// TODO CHOICE faire fonction
             //loadImage(b);
+
 
         } else if ( args.length == 3 ) { //If we are in noninteractive mode
 
             System.out.println("Chargement de l'image...");
+
             ImagePNG i = loadImage(args[0]);
 
-            System.out.println("\nCréation des fichiers ");
             int delta = Integer.parseInt(args[1]);
-            createDeltaFile(delta, args[0], i ); //creation of delta PNG and text files
-
-
             int phi = Integer.parseInt(args[2]);
+            System.out.println("\nCréation des fichiers \n"
+                               + "DELTA : SaveTXT/" + args[0] + "-" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-" + delta + ".png"
+                               + "PHI :   SaveTXT/ " + args[0] + "-" + phi + ".txt" + " et " +  "SavePNG/" + args[0] + "-" + phi + ".png" );
+
+            createDeltaFile(delta, args[0], i ); //creation of delta PNG and text files
             createPhiFile( phi, args[0], i); //creation of phi PNG and text files
 
 
