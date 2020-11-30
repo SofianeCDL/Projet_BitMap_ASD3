@@ -14,22 +14,19 @@ public class Main {
                 + "→ Nous vous invitons à presser une touche du clavier pour acceder au menu. Nous vous souhaitons une bonne découverte ! ");
 
         System.out.println(str + "\n\n");
+        Scanner scan = new Scanner(System.in);
+        String enter = scan.next();
         return displayMenu();
     }
 
-
     private static String displayMenu(){
-        Scanner scan = new Scanner(System.in);
-        String str = scan.next();
-
-        return ( "************************************* MENU *************************************\n\n"
+            return ( "************************************* MENU *************************************\n\n"
                 + "\t 1. Charger une image PNG en mémoire dans un quadtree.\n"
                 + "\t 2. Appliquer une compression Delta pour un ∆ donné.\n"
                 + "\t 3. Appliquer une compression Phi pour un Φ donné.\n"
                 + "\t 4. Sauvegarder le quadtree dans un fichier PNG.\n"
                 + "\t 5. Sauvegarder la représentation textuelle du quadtree dans un fichier TXT.\n"
-                + "\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n"
-                + "\t → A présent, choissisez quelle option vous intérresse.");
+                + "\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n" );
     }
 
     //---------------------------------------- EQM DISPLAY
@@ -41,11 +38,46 @@ public class Main {
         return displayEQM;
     }
 
-    //---------------------------------------- Interactive mode
-    //TODO coir si on eut sans appuyer sur la touche entrer selectionner une option !!
-    private static void choiceOption(){
+    private static void coninue() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Voulez-vous continuer ? ");
+        String responce = scanner.next();
 
-        //switch
+        if(responce == 'oui'){
+            choiceOption();
+        }
+    }
+
+    //---------------------------------------- Interactive mode
+    //TODO voir si on eut sans appuyer sur la touche entrer selectionner une option !!
+    private static void choiceOption() throws IOException {
+        System.out.println("\t → A présent, choissisez quelle option entre 1 et 6 vous intérresse.");
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+
+        switch(choice){
+            case 1:
+                boolean b = false;
+                loadImage(b);
+
+
+            case 2:
+                // code block
+                break;
+            case 3:
+                break;
+            case 4:
+                // code block
+                break;
+            case 5:
+                break;
+            case 6:
+                // code block
+                break;
+            default:
+                // code block
+        }
     }
 
     //---------------------------------------- image
@@ -84,6 +116,7 @@ public class Main {
         //Begin
         if ( args.length == 0 ) { //If we are in interactive mode
             System.out.println(welcome());
+            choiceOption();
 
             ///// TODO CHOICE faire fonction
             //loadImage(b);
