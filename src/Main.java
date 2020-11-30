@@ -69,7 +69,6 @@ public class Main {
     //------------------------------------------------------------ MAIN
     public static void main(String[] args) throws Exception {
 
-
         //Begin
         if ( args.length == 0 ) { //If we are in interactive mode
             System.out.println(welcome());
