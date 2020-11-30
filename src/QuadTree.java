@@ -1,11 +1,10 @@
 import java.awt.*;
 import java.io.*;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class QuadTree {
 
-    private QuadTree northWest, northEast, southEast, southWest;
+    private QuadTree northWest, northEast, southEast, southWest, father;
     private Color color;
     private boolean leaf;
 
@@ -13,27 +12,31 @@ public class QuadTree {
 
     //Constructor 1
     public QuadTree(ImagePNG image) {
-        this.northWest = null;
-        this.northEast = null;
-        this.southEast = null;
-        this.southWest = null;
+        this.northWest  = null;
+        this.northEast  = null;
+        this.southEast  = null;
+        this.southWest  = null;
 
-        this.leaf = false;
+        this.father     = null;
 
-        this.color = null;
+        this.leaf       = false;
 
-        this.image = image;
+        this.color      = null;
+
+        this.image      = image;
 
         this.createQuadTree(image, 0, 0, image.width());
 
     }
 
     //Constructor 2
-    private QuadTree(ImagePNG image, int x, int y, int sizeImage) {
+    private QuadTree(ImagePNG image, int x, int y, int sizeImage, QuadTree father) {
         this.northWest = null;
         this.northEast = null;
         this.southEast = null;
         this.southWest = null;
+
+        this.father = father;
 
         this.leaf = false;
 
@@ -80,10 +83,10 @@ public class QuadTree {
             int newXSW = x;                 //Coordinate X of cutting South West.
             int newYSW = y + newSizeImage;  //Coordinate Y of cutting South West.
 
-            this.northWest = new QuadTree(image, newXNW, newYNW, newSizeImage); //Recursive of cutting North West.
-            this.northEast = new QuadTree(image, newXNE, newYNE, newSizeImage); //Recursive of cutting North East.
-            this.southEast = new QuadTree(image, newXSE, newYSE, newSizeImage); //Recursive of cutting South East.
-            this.southWest = new QuadTree(image, newXSW, newYSW, newSizeImage); //Recursive of cutting South West.
+            this.northWest = new QuadTree(image, newXNW, newYNW, newSizeImage, this); //Recursive of cutting North West.
+            this.northEast = new QuadTree(image, newXNE, newYNE, newSizeImage, this); //Recursive of cutting North East.
+            this.southEast = new QuadTree(image, newXSE, newYSE, newSizeImage, this); //Recursive of cutting South East.
+            this.southWest = new QuadTree(image, newXSW, newYSW, newSizeImage, this); //Recursive of cutting South West.
 
 
             if (this.northWest.isLeaf() && this.northEast.isLeaf() && this.southEast.isLeaf() && this.southWest.isLeaf()) {
@@ -146,6 +149,10 @@ public class QuadTree {
         this.leaf = leaf;
     }
 
+    public QuadTree getFather() {
+        return father;
+    }
+
     /**
      * @role :
      *  @return
@@ -187,7 +194,7 @@ public class QuadTree {
     public int colorimetricDifference(Color average) {
         return (int) Math.sqrt(((this.color.getRed() - average.getRed()) * (this.color.getRed() - average.getRed()) +
                 (this.color.getGreen() - average.getGreen()) * (this.color.getGreen() - average.getGreen()) +
-                (this.color.getBlue() - average.getBlue()) * (this.color.getBlue() - average.getBlue())) / 3);
+                (this.color.getBlue() - average.getBlue()) * (this.color.getBlue() - average.getBlue())) / 3.0);
     }
 
 
@@ -200,21 +207,6 @@ public class QuadTree {
         int maxSouth = Math.max( this.southWest.colorimetricDifference(average), this.southEast.colorimetricDifference(average)); //choose the maximum direction between south east and south west.
 
         return Math.max(maxNorth, maxSouth);
-    }
-
-    public Set<Integer> growthColorimetricDifference() {
-        Color average = this.colorimetricAverage();
-
-        Set<Integer> treeSet = new TreeSet<Integer>();
-
-        treeSet.add(this.northWest.colorimetricDifference(average));
-        treeSet.add(this.northEast.colorimetricDifference(average));
-        treeSet.add(this.southEast.colorimetricDifference(average));
-        treeSet.add(this.southWest.colorimetricDifference(average));
-
-        return treeSet;
-
-
     }
 
     /** @role :
@@ -232,6 +224,7 @@ public class QuadTree {
 
                 if (colorimetricDifference <= delta) {
                     Color newColor =  tree.colorimetricAverage();
+
                     tree.setColor(newColor);
 
                     tree.setNorthWest(null);//All of sons becomes null
@@ -252,61 +245,81 @@ public class QuadTree {
         }
     }
 
+
+
     //----------------------------------------------------COMPRESS PHI
-    /** @role :
-     * @param phi
-     * @param tree
-     */
-    /*public int compressPhi(int phi, QuadTree tree, int numberLeaf) {
 
-        if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf() && phi < numberLeaf) { //If all of sons are leaf and phi < number of leaf
+    public QuadTree crushLeaf(QuadTree tree) {
+        Color newColor =  tree.colorimetricAverage();
 
-                Color newColor =  tree.colorimetricAverage();
+        tree.setColor(newColor);
 
-
-                tree.setNorthWest(null);
-                tree.setNorthEast(null);
-                tree.setSouthWest(null);
-                tree.setSouthEast(null);
+        tree.setNorthWest(null);//All of sons becomes null
+        tree.setNorthEast(null);
+        tree.setSouthWest(null);
+        tree.setSouthEast(null);
 
 
-                tree.setLeaf(true);
+        tree.setLeaf(true);
 
-                return numberLeaf - 3;
+        return tree;
+    }
+    public void compressPhi(QuadTree tree, int phi) {
+        int numberLeaf = tree.numberNodes(tree); //Calculate numbers leaf in quadtree.
 
-            return tree.colorimetricDifference(newColor);
-        } else {
-            int CDNorthWest = tree.compressPhi(phi, tree.getNorthWest(), numberLeaf);
-            int CDNorthEast = tree.compressPhi(phi, tree.getNorthEast(), numberLeaf);
-            int CDSouthEast = tree.compressPhi(phi, tree.getSouthEast(), numberLeaf);
-            int CDSouthWest = tree.compressPhi(phi, tree.getSouthWest(), numberLeaf);
+        ArrayList<QuadTree> listLeaf = new ArrayList<>();
+        ArrayList<QuadTree> listNewLeaf = new ArrayList<>();
 
-            if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf() && phi < numberLeaf) { //If all of sons are leaf and phi < number of leaf
+        compressPhiTri(tree, listLeaf); //fill listLeaf with leafs.
 
-                Color newColor =  tree.colorimetricAverage();
+        Comparator<QuadTree> comparator = new QuadTreeComparator(); //Initialinize comparator of QuadTree.
 
-                tree.setColor(newColor);
-
-                tree.setNorthWest(null);
-                tree.setNorthEast(null);
-                tree.setSouthWest(null);
-                tree.setSouthEast(null);
+        listLeaf.sort(comparator); //
 
 
-                tree.setLeaf(true);
 
-                return numberLeaf - 3;
+        while (phi < numberLeaf) {
+            if (listLeaf.size() == 0) {
+                listLeaf = listNewLeaf;
+
+                comparator = new QuadTreeComparator();
+                listLeaf.sort(comparator);
+            } else {
+                QuadTree saveTree = listLeaf.get(0);
+                saveTree = this.crushLeaf(saveTree);
+
+                listLeaf.remove(0);
+
+
+                if (saveTree.getFather() != null && saveTree.getFather().verification()) {
+                    listNewLeaf.add(saveTree.father);
+                }
+                //System.out.println("nombre noeud = " + numberLeaf + " / nombre élément = " + listLeaf.size());
+                numberLeaf -= 3;
             }
-
-            return numberLeaf;
-
-
         }
-    }*/
+    }
 
-    public int compressPhi(int phi, QuadTree tree, int numberLeaf) {
+    public boolean verification() {
+        return !this.isLeaf() && this.getNorthEast().isLeaf() && this.getNorthWest().isLeaf() && this.getSouthWest().isLeaf() && this.getSouthEast().isLeaf();
+    }
+    /**
+     *
+     * @param tree
+     * @param list
+     */
+    public void compressPhiTri( QuadTree tree, ArrayList<QuadTree> list) {
+        if (tree != null) {
+            if (tree.verification()) { //If all of sons are leaf and phi < number of leaf
+                list.add(tree);
+            } else {
 
-        if ()
+                tree.compressPhiTri(tree.getNorthWest(), list);
+                tree.compressPhiTri(tree.getNorthEast(), list);
+                tree.compressPhiTri(tree.getSouthEast(), list);
+                tree.compressPhiTri(tree.getSouthWest(), list);
+            }
+        }
     }
 
 
@@ -397,5 +410,22 @@ public class QuadTree {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QuadTree quadTree = (QuadTree) o;
+        return leaf == quadTree.leaf &&
+                Objects.equals(northWest, quadTree.northWest) &&
+                Objects.equals(northEast, quadTree.northEast) &&
+                Objects.equals(southEast, quadTree.southEast) &&
+                Objects.equals(southWest, quadTree.southWest) &&
+                Objects.equals(color, quadTree.color) &&
+                Objects.equals(image, quadTree.image);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(northWest, northEast, southEast, southWest, color, leaf, image);
+    }
 }
