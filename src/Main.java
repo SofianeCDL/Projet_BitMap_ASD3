@@ -24,13 +24,14 @@ public class Main {
                 + "\t 4. Sauvegarder le quadtree dans un fichier PNG.\n"
                 + "\t 5. Sauvegarder la représentation textuelle du quadtree dans un fichier TXT.\n"
                 + "\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n"
+
                 + "\t → A présent, choissisez quel option vous intérresse.");
     }
 
     //---------------------------------------- Interactive mode
     private static void choiceOption(){
 
-        switch
+        //switch
     }
     //------------------------------------------------------------ MAIN
     public static void main(String[] args) throws Exception {
@@ -59,7 +60,7 @@ public class Main {
         }
 
 
-        boolean b = false;
+        //boolean b = false;
         //loadImage(b);
        /* ImagePNG i = new ImagePNG("pngs/1024-cube.png"); //CHARGE UN IMAGE PNG
         QuadTree t = new QuadTree(i);
@@ -118,4 +119,6 @@ public class Main {
 
 
     }
+
+
 }

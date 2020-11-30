@@ -9,6 +9,7 @@ public class QuadTree {
     private boolean leaf;
 
     private ImagePNG image;
+    private ImagePNG compressImage;
 
     //Constructor 1
     public QuadTree(ImagePNG image) {
@@ -24,6 +25,7 @@ public class QuadTree {
         this.color      = null;
 
         this.image      = image;
+        this.compressImage = null;
 
         this.createQuadTree(image, 0, 0, image.width());
 
@@ -152,6 +154,10 @@ public class QuadTree {
         return father;
     }
 
+    public boolean verification() {
+        return !this.isLeaf() && this.getNorthEast().isLeaf() && this.getNorthWest().isLeaf() && this.getSouthWest().isLeaf() && this.getSouthEast().isLeaf();
+    }
+
     /**
      * @role :
      *  @return
@@ -217,7 +223,7 @@ public class QuadTree {
         if (tree.isLeaf()) {
             return;
         } else {
-            if (tree.getNorthEast().isLeaf() && tree.getNorthWest().isLeaf() && tree.getSouthWest().isLeaf() && tree.getSouthEast().isLeaf()) { //If all of sons are leaf
+            if (tree.verification()) { //If all of sons are leaf
 
                 int colorimetricDifference = tree.maxColorimetricDifference();
 
@@ -248,6 +254,11 @@ public class QuadTree {
 
     //----------------------------------------------------COMPRESS PHI
 
+    /**
+     *
+     * @param tree
+     * @return
+     */
     public QuadTree crushLeaf(QuadTree tree) {
         Color newColor =  tree.colorimetricAverage();
 
@@ -263,56 +274,59 @@ public class QuadTree {
 
         return tree;
     }
+
+    /**
+     * Compress the number of leaves until reaching phi.
+     * @param tree Shaft to compress
+     * @param phi leaf limit to be reached.
+     */
     public void compressPhi(QuadTree tree, int phi) {
-        int numberLeaf = tree.numberNodes(tree); //Calculate numbers leaf in quadtree.
+        int numberLeaf = tree.numberLeafs(tree); //Calculate numbers leaf in quadtree.
 
         ArrayList<QuadTree> listLeaf = new ArrayList<>();
         ArrayList<QuadTree> listNewLeaf = new ArrayList<>();
 
         compressPhiTri(tree, listLeaf); //fill listLeaf with leafs.
 
-        Comparator<QuadTree> comparator = new QuadTreeComparator(); //Initialinize comparator of QuadTree.
+        Comparator<QuadTree> comparator = new QuadTreeComparator(); //initialize comparator of QuadTree.
 
-        listLeaf.sort(comparator); //
+        listLeaf.sort(comparator); //Sort automatically listLeaf.
 
 
 
         while (phi < numberLeaf) {
             if (listLeaf.size() == 0) {
-                listLeaf = listNewLeaf;
+                listLeaf = listNewLeaf; //If listLeaf is empty, we change with the new list of leafs.
 
                 comparator = new QuadTreeComparator();
-                listLeaf.sort(comparator);
-            } else {
-                QuadTree saveTree = listLeaf.get(0);
-                saveTree = this.crushLeaf(saveTree);
+                listLeaf.sort(comparator); //Sort new listLeaf.
 
-                listLeaf.remove(0);
+            } else {
+                QuadTree saveTree = listLeaf.get(0); //Output the first element of the array
+                saveTree = this.crushLeaf(saveTree); //and crush (see crush fonction).
+
+                listLeaf.remove(0); //Delete elemente of array.
 
 
                 if (saveTree.getFather() != null && saveTree.getFather().verification()) {
-                    listNewLeaf.add(saveTree.father);
+                    listNewLeaf.add(saveTree.father); //Add in new listLeaf if the father has as a result of overwriting 4 sons.
                 }
-                //System.out.println("nombre noeud = " + numberLeaf + " / nombre élément = " + listLeaf.size());
-                numberLeaf -= 3;
+                numberLeaf -= 3; //the number of leaves decreases by 3 because 4 leaves disappear but 1 new one is created by the father (4 - 1 = 3).
             }
         }
     }
 
-    public boolean verification() {
-        return !this.isLeaf() && this.getNorthEast().isLeaf() && this.getNorthWest().isLeaf() && this.getSouthWest().isLeaf() && this.getSouthEast().isLeaf();
-    }
+
     /**
-     *
+     * Adds all the leaves of a tree to a list.
      * @param tree
-     * @param list
+     * @param list list of leafs.
      */
     public void compressPhiTri( QuadTree tree, ArrayList<QuadTree> list) {
         if (tree != null) {
-            if (tree.verification()) { //If all of sons are leaf and phi < number of leaf
+            if (tree.verification()) {
                 list.add(tree);
             } else {
-
                 tree.compressPhiTri(tree.getNorthWest(), list);
                 tree.compressPhiTri(tree.getNorthEast(), list);
                 tree.compressPhiTri(tree.getSouthEast(), list);
@@ -326,13 +340,12 @@ public class QuadTree {
          * @param tree
          * @return
          */
-    public int numberNodes(QuadTree tree){
-
+    public int numberLeafs(QuadTree tree){
         if(tree != null) {
             if (tree.isLeaf()) {
                 return 1;
             } else {
-                return (numberNodes(tree.getNorthWest()) + numberNodes(tree.getNorthEast()) + numberNodes(tree.getSouthWest()) + numberNodes(tree.getSouthEast()));
+                return (numberLeafs(tree.getNorthWest()) + numberLeafs(tree.getNorthEast()) + numberLeafs(tree.getSouthWest()) + numberLeafs(tree.getSouthEast()));
             }
         }
 
@@ -340,14 +353,28 @@ public class QuadTree {
     }
 
 
-
+    /**
+     *
+     * @param filename
+     * @throws IOException
+     */
     public void savePNG(String filename) throws IOException {
         ImagePNG imageClone = this.image.clone();
         compressionPNG(imageClone, this, 0, 0, imageClone.width());
 
+        this.compressImage = imageClone;
+
         imageClone.save(filename);
     }
 
+    /**
+     *
+     * @param image
+     * @param arbre
+     * @param x
+     * @param y
+     * @param sizeImage
+     */
     public void compressionPNG(ImagePNG image, QuadTree arbre, int x, int y, int sizeImage) {
         if (arbre.isLeaf()) {
             compressionBlockPNG(image, x, y, sizeImage, arbre.getColor());
@@ -395,7 +422,7 @@ public class QuadTree {
 
 
 
-    public void saveTXT(String location) throws IOException {
+    public void saveTXT(String location) {
         String quadTreeTXT = this.toString();
 
         try {
@@ -407,6 +434,10 @@ public class QuadTree {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public double EQM() {
+        return ImagePNG.computeEQM(this.image, this.compressImage);
     }
 
     @Override
