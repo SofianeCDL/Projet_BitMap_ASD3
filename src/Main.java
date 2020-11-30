@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
 
     //Variable
-    //QuadTree tree, deltaTree, phiTree;
+    static QuadTree tree, deltaTree, phiTree;
     boolean b = false;
 
 
@@ -32,6 +32,15 @@ public class Main {
                 + "\t → A présent, choissisez quelle option vous intérresse.");
     }
 
+    //---------------------------------------- EQM DISPLAY
+    public static String displayEQM(QuadTree tree) throws IOException {
+        String displayEQM = "";
+
+        displayEQM = "\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%";
+
+        return displayEQM;
+    }
+
     //---------------------------------------- Interactive mode
     //TODO coir si on eut sans appuyer sur la touche entrer selectionner une option !!
     private static void choiceOption(){
@@ -49,7 +58,7 @@ public class Main {
 
     ///TODO BLOQUER DELTA ENTRE 0 ET 255 !!!!!!!!!!!!!!!!!!!!!!!!!
     private static void createDeltaFile(int delta, String name, ImagePNG i) throws IOException {
-        QuadTree deltaTree = new QuadTree(i);
+        deltaTree = new QuadTree(i);
         deltaTree.compressDelta(delta);
 
         deltaTree.saveTXT("SaveTXT/" + name + "-" + delta + ".txt");
@@ -58,7 +67,7 @@ public class Main {
 
     ///TODO PHI > 0 !!!!!!!!!!!!!!!!!!!!!!!!!
     private static void createPhiFile(int phi, String name, ImagePNG i) throws IOException {
-        QuadTree phiTree = new QuadTree(i);
+        phiTree = new QuadTree(i);
         phiTree.compressPhi(phi);
 
         phiTree.saveTXT("SaveTXT/" + name + "-" + phi + ".txt");
@@ -67,6 +76,9 @@ public class Main {
     }
 
     //------------------------------------------------------------ MAIN
+    // TODO ****************************************************************************************************
+    //TODO ENREGISTRER LES SYSTEM DANS UNE VARIABLE
+    // FAIRE SOU FONCTION DE CE MAIN ET RENVOYER LE STRING POUR AFFICHAGE DANS LE MAIN
     public static void main(String[] args) throws Exception {
 
         //Begin
@@ -80,8 +92,7 @@ public class Main {
         } else if ( args.length == 3 ) { //If we are in noninteractive mode
 
             System.out.println("Chargement de l'image...");
-
-            ImagePNG i = loadImage(args[0]);
+            ImagePNG i = loadImage(args[0]); //TODO VERIFIER EXCEPTION BON NOM DE FICHIER
 
             int delta = Integer.parseInt(args[1]);
             int phi = Integer.parseInt(args[2]);
@@ -93,7 +104,10 @@ public class Main {
             createPhiFile( phi, args[0], i); //creation of phi PNG and text files
 
 
-            //TODO Affichage comparatif entre les deux !! faire fonction
+            System.out.println("\n Comparaison fichiers Delta :\n");
+            displayEQM(deltaTree);
+            System.out.println("\n Comparaison fichiers Phi :\n");
+            displayEQM(phiTree);
 
         } else {
             throw new Exception("Le nombre d'argument n'est pas le bon ! ");
@@ -127,7 +141,8 @@ public class Main {
     public static void loadImage(boolean b) throws IOException {
         Scanner scan = new Scanner(System.in);
 
-        System.out.println("Veuillez entrer le nom du fichier à tester : ");///TODO EXPCETION
+        System.out.println("Veuillez entrer le nom du fichier à tester : ");///TODO EXPCETION VERIF BON NOM DE FICHIER
+        ///TODO VOIR SI ON APPELLE CETTE FONCTION DANS LE MODE NN INTERACTIF
         try {
             String str = scan.next();
 
@@ -154,11 +169,5 @@ public class Main {
         }
     }
 
-    public static String displayEQM(QuadTree tree) throws IOException {
-        String displayEQM = "";
 
-        displayEQM = "\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%";
-
-        return displayEQM;
-    }
 }
