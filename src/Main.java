@@ -9,24 +9,26 @@ public class Main {
 
 
     //---------------------------------------- TEXT DISPLAY
-    private static String welcome() {
+    private static void welcome() throws IOException {
         String str = ("Bienvenue dans notre outil de compression d'image !\n"
                 + "→ Nous vous invitons à presser une touche du clavier pour acceder au menu. Nous vous souhaitons une bonne découverte ! ");
 
         System.out.println(str + "\n\n");
         Scanner scan = new Scanner(System.in);
         String enter = scan.next();
-        return displayMenu();
+        displayMenu();
     }
 
-    private static String displayMenu(){
-            return ( "************************************* MENU *************************************\n\n"
+    private static void displayMenu() throws IOException {
+            System.out.println( "************************************* MENU *************************************\n\n"
                 + "\t 1. Charger une image PNG en mémoire dans un quadtree.\n"
                 + "\t 2. Appliquer une compression Delta pour un ∆ donné.\n"
                 + "\t 3. Appliquer une compression Phi pour un Φ donné.\n"
                 + "\t 4. Sauvegarder le quadtree dans un fichier PNG.\n"
                 + "\t 5. Sauvegarder la représentation textuelle du quadtree dans un fichier TXT.\n"
                 + "\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n" );
+
+            choiceOption();
     }
 
     //---------------------------------------- EQM DISPLAY
@@ -38,13 +40,17 @@ public class Main {
         return displayEQM;
     }
 
-    private static void coninue() throws IOException {
+    private static void continueProgramm() throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Voulez-vous continuer ? ");
         String responce = scanner.next();
 
-        if(responce == 'oui'){
-            choiceOption();
+        if(responce.equals("oui") || responce.equals("Oui") || responce.equals("OUI")){
+            displayMenu();
+        } else if (responce.equals("non") || responce.equals("Non") || responce.equals("NON")) {
+            return;
+        } else {
+            continueProgramm();
         }
     }
 
@@ -60,24 +66,27 @@ public class Main {
             case 1:
                 boolean b = false;
                 loadImage(b);
-
-
+                break;
             case 2:
-                // code block
+                compressDelta();
                 break;
             case 3:
+                compressPhi();
                 break;
             case 4:
-                // code block
+                savePNG();
                 break;
             case 5:
+                saveTXT();
                 break;
             case 6:
-                // code block
+                displayEQM(tree);
                 break;
             default:
-                // code block
+                System.out.println("Entrée invalide, veuillez refaire votre choix.");
+                choiceOption();
         }
+        continueProgramm();
     }
 
     //---------------------------------------- image
@@ -93,8 +102,8 @@ public class Main {
         deltaTree = new QuadTree(i);
         deltaTree.compressDelta(delta);
 
-        deltaTree.saveTXT("SaveTXT/" + name + "-" + delta + ".txt");
-        deltaTree.savePNG("SavePNG/" + name + "-" + delta + ".png");
+        deltaTree.saveTXT("SaveTXT/" + name + "-delta" + delta + ".txt");
+        deltaTree.savePNG("SavePNG/" + name + "-delta" + delta + ".png");
     }
 
     ///TODO PHI > 0 !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -102,8 +111,8 @@ public class Main {
         phiTree = new QuadTree(i);
         phiTree.compressPhi(phi);
 
-        phiTree.saveTXT("SaveTXT/" + name + "-" + phi + ".txt");
-        phiTree.savePNG("SavePNG/" + name + "-" + phi + ".png");
+        phiTree.saveTXT("SaveTXT/" + name + "-phi" + phi + ".txt");
+        phiTree.savePNG("SavePNG/" + name + "-phi" + phi + ".png");
 
     }
 
@@ -115,12 +124,7 @@ public class Main {
 
         //Begin
         if ( args.length == 0 ) { //If we are in interactive mode
-            System.out.println(welcome());
-            choiceOption();
-
-            ///// TODO CHOICE faire fonction
-            //loadImage(b);
-
+            welcome();
 
         } else if ( args.length == 3 ) { //If we are in noninteractive mode
 
@@ -130,43 +134,19 @@ public class Main {
             int delta = Integer.parseInt(args[1]);
             int phi = Integer.parseInt(args[2]);
             System.out.println("\nCréation des fichiers \n"
-                               + "DELTA : SaveTXT/" + args[0] + "-" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-" + delta + ".png"
-                               + "PHI :   SaveTXT/ " + args[0] + "-" + phi + ".txt" + " et " +  "SavePNG/" + args[0] + "-" + phi + ".png" );
+                               + "DELTA : SaveTXT/" + args[0] + "-delta" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-delta" + delta + ".png"
+                               + "PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " +  "SavePNG/" + args[0] + "-phi" + phi + ".png" );
 
             createDeltaFile(delta, args[0], i ); //creation of delta PNG and text files
             createPhiFile( phi, args[0], i); //creation of phi PNG and text files
 
 
-            System.out.println("\n Comparaison fichiers Delta :\n");
-            displayEQM(deltaTree);
-            System.out.println("\n Comparaison fichiers Phi :\n");
-            displayEQM(phiTree);
+            System.out.println("\n Comparaison fichiers Delta : " + displayEQM(deltaTree));
+            System.out.println("\n Comparaison fichiers Phi : " + displayEQM(phiTree));
 
         } else {
             throw new Exception("Le nombre d'argument n'est pas le bon ! ");
         }
-
-
-        //boolean b = false;
-        //loadImage(b);
-       /* ImagePNG i = new ImagePNG("pngs/1024-cube.png"); //CHARGE UN IMAGE PNG
-        QuadTree t = new QuadTree(i);
-        //System.out.println(t.toString());
-
-        //System.out.println(t.numberNodes(t));
-
-
-
-        //t.compressDelta(75, t);
-        System.out.println(t.numberNodes(t));
-       // t.compressPhi(200000, t, t.numberNodes(t));
-        System.out.println(t.numberNodes(t));
-
-        //System.out.println(t.toString());
-
-        t.saveTXT("SaveTXT/test.txt");
-
-        t.savePNG("SavePNG/test1.png");*/
 
     }
 
@@ -185,10 +165,10 @@ public class Main {
 
             ImagePNG i = new ImagePNG(begin+str+end); //CHARGE UN IMAGE PNG
 
-            QuadTree t = new QuadTree(i);
+            tree = new QuadTree(i);
             System.out.println("\nAFFICHAGE ARBRE DE LA PHOTO : " + str );
             b = true;
-            System.out.println(t.toString());
+            System.out.println(tree.toString());
 
         }
         catch(Exception e ){
@@ -202,5 +182,33 @@ public class Main {
         }
     }
 
+    public static void compressDelta() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Choissisez votre delta pour la compression : ");
+        int delta = scan.nextInt();
+        tree.compressDelta(delta);
+        //scan.close();
+    }
 
+    public static void compressPhi() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Choissisez votre phi pour la compression : ");
+        int phi = scan.nextInt();
+        tree.compressPhi(phi);
+        //scan.close();
+    }
+
+    private static void savePNG() throws IOException {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Choissisez votre nom de fichier PNG : ");
+        String namePNG = scan.next();
+        tree.savePNG("SavePNG/" + namePNG + ".png");
+    }
+
+    private static void saveTXT() throws IOException {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Choissisez votre nom de fichier TXT : ");
+        String nameTXT = scan.next();
+        tree.savePNG("SavePNG/" + nameTXT + ".png");
+    }
 }

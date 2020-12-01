@@ -260,6 +260,25 @@ public class QuadTree {
                 compressDelta(delta, tree.getNorthEast());
                 compressDelta(delta, tree.getSouthEast());
                 compressDelta(delta, tree.getSouthWest());
+
+                if (tree.verificationBound()) { //If all of sons are leaf
+
+                    int colorimetricDifference = tree.maxColorimetricDifference();
+
+                    if (colorimetricDifference <= delta) {
+                        Color newColor = tree.colorimetricAverage();
+
+                        tree.setColor(newColor);
+
+                        tree.setNorthWest(null);//All of sons becomes null
+                        tree.setNorthEast(null);
+                        tree.setSouthWest(null);
+                        tree.setSouthEast(null);
+
+
+                        tree.setLeaf(true);
+                    }
+                }
            }
         }
     }
@@ -280,33 +299,38 @@ public class QuadTree {
     private void compressPhi(QuadTree tree, int phi) {
         int numberLeaf = tree.numberLeafs(tree); //Calculate numbers leaf in quadtree.
 
-        ArrayList<QuadTree> listLeaf = new ArrayList<>();
-        ArrayList<QuadTree> listNewLeaf = new ArrayList<>();
+        Comparator<QuadTree> comparator = new QuadTreeComparator();
+        TreeSet<QuadTree> listLeaf = new TreeSet<QuadTree>(comparator);
+
+        //ArrayList<QuadTree> listLeaf = new ArrayList<>();
+        //ArrayList<QuadTree> listNewLeaf = new ArrayList<>();
 
         this.compressPhiTri(tree, listLeaf); //fill listLeaf with leafs.
 
-        Comparator<QuadTree> comparator = new QuadTreeComparator(); //initialize comparator of QuadTree.
+         //initialize comparator of QuadTree.
 
-        listLeaf.sort(comparator); //Sort automatically listLeaf.
+        //Collections.sort(listLeaf, comparator);//Sort automatically listLeaf.
 
-        while (phi < numberLeaf) {
-            if (listLeaf.size() == 0) {
-                listLeaf = listNewLeaf; //If listLeaf is empty, we change with the new list of leafs.
+        while (phi < numberLeaf && listLeaf.size() > 0) {
 
-                comparator = new QuadTreeComparator();
-                listLeaf.sort(comparator); //Sort new listLeaf.
+            QuadTree saveTree = listLeaf.first();
+            listLeaf.remove(saveTree);
+            // Displaying the values after iterating through the set
+            //System.out.println("The iterator values are: ");
 
-            } else {
-                QuadTree saveTree = listLeaf.get(0); //Output the first element of the array
+            //Output the first element of the array
+
+            if (saveTree != null) {
                 saveTree = this.crushLeaf(saveTree); //and crush (see crush fonction).
 
-                listLeaf.remove(0); //Delete elemente of array.
+                 //Delete elemente of array.
 
 
                 if (saveTree.getFather() != null && saveTree.getFather().verificationBound()) {
-                    listNewLeaf.add(saveTree.father); //Add in new listLeaf if the father has as a result of overwriting 4 sons.
+                    listLeaf.add(saveTree.father); //Add in new listLeaf if the father has as a result of overwriting 4 sons.
                 }
                 numberLeaf -= 3; //the number of leaves decreases by 3 because 4 leaves disappear but 1 new one is created by the father (4 - 1 = 3).
+
             }
         }
     }
@@ -317,7 +341,7 @@ public class QuadTree {
      * @param tree
      * @param list list of leafs.
      */
-    private void compressPhiTri( QuadTree tree, ArrayList<QuadTree> list) {
+    private void compressPhiTri( QuadTree tree, TreeSet<QuadTree> list) {
         if (tree != null) {
             if (tree.verificationBound()) {
                 list.add(tree);
