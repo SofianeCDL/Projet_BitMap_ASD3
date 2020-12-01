@@ -172,17 +172,17 @@ public class QuadTree {
      *  @return display in format String.
      */
     public String toString() {
-        String display = " ";
+        String display = "(";
 
         if (this.leaf) {
             return ImagePNG.colorToHex(this.color);
         } else {
-            display += "(" + this.northWest.toString() + ") ";
-            display += "(" + this.northEast.toString() + ") ";
-            display += "(" + this.southEast.toString() + ") ";
-            display += "(" + this.southWest.toString() + ") ";
+            display += "" + this.northWest.toString() + " ";
+            display += "" + this.northEast.toString() + " ";
+            display += "" + this.southEast.toString() + " ";
+            display += "" + this.southWest.toString();
 
-            return display + " ";
+            return display + ")";
         }
     }
 
@@ -315,23 +315,24 @@ public class QuadTree {
 
             QuadTree saveTree = listLeaf.first();
             listLeaf.remove(saveTree);
-            // Displaying the values after iterating through the set
             //System.out.println("The iterator values are: ");
 
             //Output the first element of the array
 
-            if (saveTree != null) {
-                saveTree = this.crushLeaf(saveTree); //and crush (see crush fonction).
-
-                 //Delete elemente of array.
+            crushLeaf(saveTree);//and crush (see crush fonction).
 
 
-                if (saveTree.getFather() != null && saveTree.getFather().verificationBound()) {
-                    listLeaf.add(saveTree.father); //Add in new listLeaf if the father has as a result of overwriting 4 sons.
-                }
-                numberLeaf -= 3; //the number of leaves decreases by 3 because 4 leaves disappear but 1 new one is created by the father (4 - 1 = 3).
 
+            if (listLeaf.contains(saveTree.father)) {
+                System.out.println("true");
             }
+
+
+            if (saveTree.getFather() != null && saveTree.getFather().verificationBound()) {
+                listLeaf.add(saveTree.getFather()); //Add in new listLeaf if the father has as a result of overwriting 4 sons.
+            }
+
+            numberLeaf -= 3;
         }
     }
 

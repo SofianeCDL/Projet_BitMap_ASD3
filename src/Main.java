@@ -154,6 +154,8 @@ public class Main {
     public static void loadImage(boolean b) throws IOException {
         Scanner scan = new Scanner(System.in);
 
+        //TODO Prendre en compte que l'utilisateur decide de ou il veux prendre son image.
+
         System.out.println("Veuillez entrer le nom du fichier à tester : ");///TODO EXPCETION VERIF BON NOM DE FICHIER
         ///TODO VOIR SI ON APPELLE CETTE FONCTION DANS LE MODE NN INTERACTIF
         try {
@@ -199,6 +201,7 @@ public class Main {
     }
 
     private static void savePNG() throws IOException {
+        //TODO Prendre en compte que l'utilisateur decide de ou il veux enregistrer son image.
         Scanner scan = new Scanner(System.in);
         System.out.println("Choissisez votre nom de fichier PNG : ");
         String namePNG = scan.next();
@@ -206,6 +209,7 @@ public class Main {
     }
 
     private static void saveTXT() throws IOException {
+        //TODO Prendre en compte que l'utilisateur decide de ou il veux enregistrer son txt.
         Scanner scan = new Scanner(System.in);
         System.out.println("Choissisez votre nom de fichier TXT : ");
         String nameTXT = scan.next();
