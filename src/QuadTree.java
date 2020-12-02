@@ -8,11 +8,11 @@ public class QuadTree {
     private Color color;
     private boolean leaf;
 
-    private ImagePNG image;
+    private String imagePath;
     private ImagePNG compressImage;
 
     //Constructor 1
-    public QuadTree(ImagePNG image) {
+    public QuadTree(String imagePath) throws IOException {
         this.northWest      = null;
         this.northEast      = null;
         this.southEast      = null;
@@ -24,15 +24,18 @@ public class QuadTree {
 
         this.color          = null;
 
-        this.image          = image;
+        this.imagePath      = imagePath;
+
+        ImagePNG image = Main.loadImage(imagePath);
+
         this.compressImage  = null;
 
-        this.createQuadTree(image, 0, 0, image.width());
+        this.createQuadTree(image, imagePath, 0, 0, image.width());
 
     }
 
     //Constructor 2
-    private QuadTree(ImagePNG image, int x, int y, int sizeImage, QuadTree father) {
+    private QuadTree(ImagePNG image, String imagePath, int x, int y, int sizeImage, QuadTree father) {
         this.northWest      = null;
         this.northEast      = null;
         this.southEast      = null;
@@ -44,10 +47,10 @@ public class QuadTree {
 
         this.color          = null;
 
-        this.image          = image;
+        this.imagePath      = imagePath;
         this.compressImage  = null;
 
-        this.createQuadTree(image, x, y, sizeImage);
+        this.createQuadTree(image, imagePath, x, y, sizeImage);
 
     }
 
@@ -57,7 +60,7 @@ public class QuadTree {
      *  @param y position y of pixel.
      *  @param sizeImage number pixel per side.
      */
-    private void createQuadTree(ImagePNG image, int x, int y, int sizeImage) {
+    private void createQuadTree(ImagePNG image, String imagePath, int x, int y, int sizeImage) {
 
         if (sizeImage == 1) {
             this.color = image.getPixel(x, y);
@@ -78,10 +81,10 @@ public class QuadTree {
             int newXSW = x;                 //Coordinate X of cutting South West.
             int newYSW = y + newSizeImage;  //Coordinate Y of cutting South West.
 
-            this.northWest = new QuadTree(image, newXNW, newYNW, newSizeImage, this); //Recursive of cutting North West.
-            this.northEast = new QuadTree(image, newXNE, newYNE, newSizeImage, this); //Recursive of cutting North East.
-            this.southEast = new QuadTree(image, newXSE, newYSE, newSizeImage, this); //Recursive of cutting South East.
-            this.southWest = new QuadTree(image, newXSW, newYSW, newSizeImage, this); //Recursive of cutting South West.
+            this.northWest = new QuadTree(image, imagePath, newXNW, newYNW, newSizeImage, this); //Recursive of cutting North West.
+            this.northEast = new QuadTree(image, imagePath, newXNE, newYNE, newSizeImage, this); //Recursive of cutting North East.
+            this.southEast = new QuadTree(image, imagePath, newXSE, newYSE, newSizeImage, this); //Recursive of cutting South East.
+            this.southWest = new QuadTree(image, imagePath, newXSW, newYSW, newSizeImage, this); //Recursive of cutting South West.
 
 
             if (this.northWest.isLeaf() && this.northEast.isLeaf() && this.southEast.isLeaf() && this.southWest.isLeaf()) {

@@ -195,13 +195,8 @@ public class Main {
         try {
             String fileName = scan.next();
 
-            String begin = "pngs/";
-            String end = ".png";
+            tree = new QuadTree(fileName);
 
-
-            ImagePNG i = new ImagePNG(begin+fileName+end); //CHARGE UN IMAGE PNG
-
-            tree = new QuadTree(i);
             System.out.println("\nAFFICHAGE ARBRE DE LA PHOTO : " + fileName + "\n" );
             b = true;
             System.out.println(tree.toString());
@@ -246,5 +241,15 @@ public class Main {
         System.out.println("Choissisez votre nom de fichier TXT : ");
         String nameTXT = scan.next();
         tree.savePNG("SavePNG/" + nameTXT + ".png");
+    }
+
+    public ImagePNG loadImagePNG(String imagePath) throws IOException {
+        if (imagePath.contains("/")) {
+            return new ImagePNG(imagePath);
+        } else if (imagePath.contains(".png")){
+            return new ImagePNG("pngs/" + imagePath);
+        } else {
+            return new ImagePNG("pngs/" + imagePath + ".png");
+        }
     }
 }
