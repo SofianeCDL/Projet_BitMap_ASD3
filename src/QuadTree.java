@@ -191,9 +191,8 @@ public class QuadTree {
 
     // ----------------------------------------------- COLORIMETRIC DIFFERENCE -----------------------------------------------
 
-    /**
-     * Average color between north east, north west, south west and south east.
-     * @return average color.
+    /** @role : Average color between north east, north west, south west and south east.
+     *  @return average color.
      */
     public Color colorimetricAverage() {
         int Rm = (this.northWest.getColor().getRed()   + this.northEast.getColor().getRed()   + this.southEast.getColor().getRed()   + this.southWest.getColor().getRed()) / 4; //Average red color between north east, north west, south west and south east.

@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -7,7 +8,7 @@ public class Main {
     //Variable
     private static QuadTree tree, deltaTree, phiTree;
     private static ArrayList<String> listMenu;
-    private static ArrayList<Integer> menuChoiceMade;
+    private static ArrayList<Integer> menuChoiceMade = new ArrayList<Integer>();
     private static boolean firstStage = false, secondStage = false, thirdStage = false, fourthStage = false ;
 
 
@@ -16,7 +17,7 @@ public class Main {
         String str = ("Bienvenue dans notre outil de compression d'image !\n"
                 + "→ Nous vous invitons à presser une touche du clavier pour acceder au menu. Nous vous souhaitons une bonne découverte ! ");
 
-        System.out.println(str + "\n\n");
+        System.out.println(str + "\n");
         Scanner scan = new Scanner(System.in);
         String enter = scan.next();
         createMenu();
@@ -34,6 +35,7 @@ public class Main {
         listMenu.add("\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n");
 
         //System.out.println(listMenu.toString());
+        displayCorrectMenu();
         choiceOption();
     }
 
@@ -41,17 +43,22 @@ public class Main {
         String display = "";
 
         if ( menuChoiceMade.size() != 0 ) {
-            if ( firstStage == true && secondStage == false ){
+            if ( firstStage && !secondStage ){
                 display = listMenu.get(0) + listMenu.get(1) + listMenu.get(2) + listMenu.get(3);
+                secondStage = true;
 
-            } else if ( firstStage == true && secondStage == true && thirdStage == false  ) {
+            } else if ( firstStage && secondStage && !thirdStage ) {
                 display = listMenu.get(0) + listMenu.get(1) + listMenu.get(2) + listMenu.get(3) + listMenu.get(4) + listMenu.get(5);
+                thirdStage = true;
 
-            } else if ( firstStage == true && secondStage == true && thirdStage == true && fourthStage == false  ) {
+            } else if ( firstStage && secondStage && thirdStage && !fourthStage ) {
                 display = listMenu.get(0) + listMenu.get(1) + listMenu.get(2) + listMenu.get(3) + listMenu.get(4) + listMenu.get(5) + listMenu.get(6);
+                fourthStage = true;
 
-            } else if ( firstStage == true && secondStage == true && thirdStage == true && fourthStage == true  ) {
+            } else if ( firstStage && secondStage && thirdStage && fourthStage   ) {
                 display = "Voullez-vous charger une nouvelle image ? ";
+                menuChoiceMade.clear();
+                firstStage = secondStage = thirdStage = fourthStage = false;
                 continueProgramm();
             }
 
@@ -67,7 +74,7 @@ public class Main {
         System.out.println("→ A présent, choissisez quelle option entre 1 et 6 vous intérresse.");
 
         Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
+        int choice = scanner.nextInt();// TODO verifier qu'on entre bien un int
         menuChoiceMade.add(choice);//We store the selection to display the correct options in the menu
 
         switch(choice){
@@ -247,7 +254,7 @@ public class Main {
         tree.savePNG("SavePNG/" + nameTXT + ".png");
     }
 
-    public ImagePNG loadImagePNG(String imagePath) throws IOException {
+    public static ImagePNG loadImagePNG(String imagePath) throws IOException {
         if (imagePath.contains("/")) {
             return new ImagePNG(imagePath);
         } else if (imagePath.contains(".png")){
