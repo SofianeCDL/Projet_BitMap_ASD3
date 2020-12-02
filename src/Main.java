@@ -7,7 +7,7 @@ public class Main {
     //Variable
     private static QuadTree tree, deltaTree, phiTree;
     private static ArrayList<String> listMenu;
-    private static ArrayList<Integer> menuChoiceMade = new ArrayList<>();
+    private static final ArrayList<Integer> menuChoiceMade = new ArrayList<>();
     private static boolean firstStage = false, secondStage = false, thirdStage = false;
 
 
@@ -23,7 +23,7 @@ public class Main {
     }
 
     private static void createMenu() throws IOException {
-        listMenu = new ArrayList<String>();
+        listMenu = new ArrayList<>();
 
         listMenu.add("\n************************************* MENU *************************************\n\n");
         listMenu.add("\t 1. Charger une image PNG en mémoire dans un quadtree.\n");
@@ -54,9 +54,8 @@ public class Main {
                 display = "Voullez-vous charger une nouvelle image ? "; //TODO VOIR CHOIX OUI NON
                 menuChoiceMade.clear();
                 firstStage = secondStage = thirdStage = false;
-                continueProgramm();
+                //continueProgramm();
             }
-
         } else {
             display = listMenu.get(0) + listMenu.get(1);
         }
@@ -148,16 +147,13 @@ public class Main {
     }
 
     //---------------------------------------- EQM DISPLAY
-    public static String displayEQM(QuadTree tree) throws IOException {
-        String displayEQM = "";
+    public static void displayEQM(QuadTree tree) throws IOException {
 
-        displayEQM = "\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%";
-
-        return displayEQM;
+        System.out.println("\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%");
     }
 
     //------------------------------------------------------------ MAIN
-    // TODO ****************************************************************************************************
+    // TODO **************************************************************************************************
     //TODO ENREGISTRER LES SYSTEM DANS UNE VARIABLE
     // FAIRE SOU FONCTION DE CE MAIN ET RENVOYER LE STRING POUR AFFICHAGE DANS LE MAIN
     public static void main(String[] args) throws Exception {
@@ -181,8 +177,10 @@ public class Main {
             createPhiFile( phi, args[0], args[0]); //creation of phi PNG and text files
 
 
-            System.out.println("\n Comparaison fichiers Delta : " + displayEQM(deltaTree));
-            System.out.println("\n Comparaison fichiers Phi : " + displayEQM(phiTree));
+            System.out.print("\n Comparaison fichiers Delta : ");
+            displayEQM(deltaTree);
+            System.out.print("\n Comparaison fichiers Phi : ");
+            displayEQM(phiTree);
 
         } else {
             throw new Exception("Le nombre d'argument n'est pas le bon ! ");
@@ -194,7 +192,7 @@ public class Main {
     public static void loadImage(boolean b) throws IOException {
         Scanner scan = new Scanner(System.in);
 
-        System.out.println("Veuillez entrer le nom du fichier à tester. Pour cela, entrez uniquement le nom du fichier sans son extention.");
+        System.out.println("Veuillez entrer le nom ou le chemin de votre fichier à sauvegarder.");
         ///TODO EXPCETION VERIF BON NOM DE FICHIER +
         ///TODO VOIR SI ON APPELLE CETTE FONCTION DANS LE MODE NN INTERACTIF
 

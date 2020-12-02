@@ -6,11 +6,21 @@ public class MainSimple {
 
     public static void main(String[] args) throws IOException {
 
-       // QuadTree t = new QuadTree("pngs/32-tux.png");
-        QuadTree t2 = new QuadTree("32-tux");
-        //QuadTree t3 = new QuadTree("pngs/2_3.png");
+        //Menu m = new Menu();
 
-        /*System.out.println("t1 : " + t.toString() + " | t2 : " + t2.toString() + " | t3 : " + t3.toString());
+        //m.noInteractiveProgramme(args);
+
+        // instructions
+
+        long dep = System.currentTimeMillis();
+
+
+        QuadTree t = new QuadTree("1024-cube");
+        //QuadTree t2 = new QuadTree("1024-cube");
+        //QuadTree t3 = new QuadTree("1024-cube");
+
+        /*
+        System.out.println("t1 : " + t.toString() + " | t2 : " + t2.toString() + " | t3 : " + t3.toString());
 
         Comparator<QuadTree> comparator = new QuadTreeComparator();
         TreeSet<QuadTree> test = new TreeSet<>(comparator);
@@ -29,19 +39,31 @@ public class MainSimple {
 
         test.add(t);
 
-        System.out.println(test.toString());*/
+        System.out.println(test.toString());
 
 
         //System.out.println(t.toString());
 
-        System.out.println(t2.numberLeafs(t2));
-        t2.compressDelta(255);
-        System.out.println(t2.numberLeafs(t2));
+
+        String cpt = t2.toString();
+        //System.out.println(cpt.length());*/
+
+        //System.out.println(t2.numberLeafs(t2));
+        t.compressPhi(4);
+        //t2.compressPhi(191);
+        //t3.compressPhi(192);
+        //System.out.println(t2.numberLeafs(t2));
 
 
-        t2.savePNG("SavePNG/test2.png");
+        t.savePNG("SavePNG/test.png");
+        //t2.savePNG("SavePNG/test2.png");
+        //t3.savePNG("SavePNG/test3.png");
+        //t2.saveTXT("SaveTXT/test.txt");
 
-        System.out.println(Main.displayEQM(t2));
+        //Main.displayEQM(t2);
+
+        System.out.println((System.currentTimeMillis() - dep) / 1000.0);
+
 
     }
 }

@@ -4,31 +4,37 @@ import java.util.*;
 
 public class QuadTree {
 
-    private QuadTree northWest, northEast, southEast, southWest, father;
+    private QuadTree northWest;
+    private QuadTree northEast;
+    private QuadTree southEast;
+    private QuadTree southWest;
+
+    private final QuadTree father;
+
     private Color color;
     private boolean leaf;
 
-    private String imagePath;
-    private String compressImagePath;
+    private final String imagePath;
+    private final String compressImagePath;
 
     //Constructor 1
     public QuadTree(String imagePath) throws IOException {
-        this.northWest      = null;
-        this.northEast      = null;
-        this.southEast      = null;
-        this.southWest      = null;
+        this.northWest          = null;
+        this.northEast          = null;
+        this.southEast          = null;
+        this.southWest          = null;
 
-        this.father         = null;
+        this.father             = null;
 
-        this.leaf           = false;
+        this.leaf               = false;
 
-        this.color          = null;
+        this.color              = null;
 
-        this.imagePath      = imagePath;
+        this.imagePath          = imagePath;
 
         ImagePNG image = Main.loadImagePNG(imagePath);
 
-        this.compressImagePath  = "";
+        this.compressImagePath  = imagePath;
 
         this.createQuadTree(image, imagePath, 0, 0, image.width());
 
@@ -36,19 +42,19 @@ public class QuadTree {
 
     //Constructor 2
     private QuadTree(ImagePNG image, String imagePath, int x, int y, int sizeImage, QuadTree father) {
-        this.northWest      = null;
-        this.northEast      = null;
-        this.southEast      = null;
-        this.southWest      = null;
+        this.northWest          = null;
+        this.northEast          = null;
+        this.southEast          = null;
+        this.southWest          = null;
 
-        this.father         = father;
+        this.father             = father;
 
-        this.leaf           = false;
+        this.leaf               = false;
 
-        this.color          = null;
+        this.color              = null;
 
-        this.imagePath      = imagePath;
-        this.compressImagePath  = "";
+        this.imagePath          = imagePath;
+        this.compressImagePath  = imagePath;
 
         this.createQuadTree(image, imagePath, x, y, sizeImage);
 
@@ -69,22 +75,17 @@ public class QuadTree {
         } else {
             int newSizeImage = sizeImage / 2; //Calculation of new size of childrens (North West, North East, South East and South West).
 
-            int newXNW = x;                 //Coordinate X of cutting North West.
-            int newYNW = y;                 //Coordinate Y of cutting North West.
-
             int newXNE = x + newSizeImage;  //Coordinate X of cutting North East.
-            int newYNE = y;                 //Coordinate Y of cutting North East.
 
             int newXSE = x + newSizeImage;  //Coordinate X of cutting South East.
             int newYSE = y + newSizeImage;  //Coordinate Y of cutting South East.
 
-            int newXSW = x;                 //Coordinate X of cutting South West.
             int newYSW = y + newSizeImage;  //Coordinate Y of cutting South West.
 
-            this.northWest = new QuadTree(image, imagePath, newXNW, newYNW, newSizeImage, this); //Recursive of cutting North West.
-            this.northEast = new QuadTree(image, imagePath, newXNE, newYNE, newSizeImage, this); //Recursive of cutting North East.
+            this.northWest = new QuadTree(image, imagePath, x, y, newSizeImage, this); //Recursive of cutting North West.
+            this.northEast = new QuadTree(image, imagePath, newXNE, y, newSizeImage, this); //Recursive of cutting North East.
             this.southEast = new QuadTree(image, imagePath, newXSE, newYSE, newSizeImage, this); //Recursive of cutting South East.
-            this.southWest = new QuadTree(image, imagePath, newXSW, newYSW, newSizeImage, this); //Recursive of cutting South West.
+            this.southWest = new QuadTree(image, imagePath, x, newYSW, newSizeImage, this); //Recursive of cutting South West.
 
 
             if (this.northWest.isLeaf() && this.northEast.isLeaf() && this.southEast.isLeaf() && this.southWest.isLeaf()) { //lossless compression.
@@ -286,7 +287,7 @@ public class QuadTree {
         int numberLeaf = tree.numberLeafs(tree); //Calculate numbers leaf in quadtree.
 
         Comparator<QuadTree> comparator = new QuadTreeComparator();
-        TreeSet<QuadTree> listLeaf = new TreeSet<QuadTree>(comparator);
+        TreeSet<QuadTree> listLeaf = new TreeSet<>(comparator);
 
         this.compressPhiTri(tree, listLeaf); //fill listLeaf with leafs.
 
@@ -300,6 +301,7 @@ public class QuadTree {
             if (saveTree.getFather() != null && saveTree.getFather().verificationBound()) {
                 listLeaf.add(saveTree.getFather()); //Add in new listLeaf if the father has as a result of overwriting 4 sons.
             }
+
             numberLeaf -= 3;
         }
     }
@@ -307,7 +309,7 @@ public class QuadTree {
 
     /**
      * Adds all the leaves of a tree to a list.
-     * @param tree
+     * @param tree Quadtree
      * @param list list of leafs.
      */
     private void compressPhiTri( QuadTree tree, TreeSet<QuadTree> list) {
@@ -325,9 +327,8 @@ public class QuadTree {
 
     // ----------------------------------------------- LEAFS OPERATION -----------------------------------------------
 
-    /**
-     *
-     * @param tree
+    /** @role : turns a father of 4 leaves into leaves.
+     * @param tree Father of 4 leaves.
      */
     private void crushLeaf(QuadTree tree) {
         Color newColor =  tree.colorimetricAverage();
@@ -362,7 +363,10 @@ public class QuadTree {
     }
 
     // ----------------------------------------------- SAVE PNG -----------------------------------------------
+
+
     /**
+     *
      * @param filename
      * @throws IOException
      */
@@ -371,27 +375,20 @@ public class QuadTree {
 
         this.compressionPNG(image, this, 0, 0, image.width());
 
-        if (filename.contains("/")) {
-            this.compressImagePath = filename;
-        } else if (filename.contains(".png")) {
-            this.compressImagePath = "savePNG/" + filename;
-        } else {
-            this.compressImagePath = "savePNG/" + filename + ".png";
-        }
-
         image.save(filename);
     }
 
-    /** @role :
-     * @param image
-     * @param arbre
-     * @param x
-     * @param y
-     * @param sizeImage
+    /** @role : Recursively cycle through the tree and overwrite identical pixel packets with the help of crushPixelPNG.
+     *
+     * @param image image to compress to PNG.
+     * @param arbre Tree to parcoured.
+     * @param x position X in image.
+     * @param y position Y in image.
+     * @param sizeImage number of pixels on one side of the image.
      */
     private void compressionPNG(ImagePNG image, QuadTree arbre, int x, int y, int sizeImage) {
         if (arbre.isLeaf()) {
-            crushPixelPNG(image, x, y, sizeImage, arbre.getColor());
+            crushPixelPNG(image, x, y, x, y, sizeImage, arbre.getColor());
         } else {
             int newSizeImage = sizeImage / 2; //Calculation of new size of childrens (North West, North East, South East and South West).
 
@@ -409,18 +406,28 @@ public class QuadTree {
         }
     }
 
-    ///TODO CHANGER NOM FONCTION
-    private void crushPixelPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
+    /** @role : overwrite pixels of identical packet.
+     *
+     * @param image
+     * @param x0
+     * @param y0
+     * @param x
+     * @param y
+     * @param sizeImage
+     * @param rgb
+     */
+    private void crushPixelPNG(ImagePNG image, int x0, int y0,  int x, int y, int sizeImage, Color rgb) {
 
-        /*if (x == x + sizeImage) {
-            image.setPixel(x, y, new Color(0,0,0));
+        /*if (x == x0 + sizeImage - 1 || y == y0 + sizeImage - 1) {
+            //System.out.println("X = " + x + " | Y = " + y + " block | sizeImage = " + sizeImage);
+            image.setPixel(x, y, rgb);
         } else {
-            //System.out.println("X = " + x + " / Y = " + y + " block" );
+            System.out.println("X = " + x + " | Y = " + y + " block | sizeImage = " + sizeImage);
 
-            image.setPixel(x, y, new Color(0, 0, 0));
+            image.setPixel(x, y, rgb);
 
-            crushPixelPNG(image, x + 1, y, sizeImage, rgb);
-            crushPixelPNG(image, x, y + 1, sizeImage, rgb);
+            crushPixelPNG(image, x0, y0, x + 1, y, sizeImage, rgb);
+            crushPixelPNG(image,x0, y0, x, y + 1, sizeImage, rgb);
         }*/
 
         for (int i = x ; i < x + sizeImage ; ++i) {
