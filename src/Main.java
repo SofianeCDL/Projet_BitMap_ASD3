@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -8,8 +7,8 @@ public class Main {
     //Variable
     private static QuadTree tree, deltaTree, phiTree;
     private static ArrayList<String> listMenu;
-    private static ArrayList<Integer> menuChoiceMade = new ArrayList<Integer>();
-    private static boolean firstStage = false, secondStage = false, thirdStage = false, fourthStage = false ;
+    private static ArrayList<Integer> menuChoiceMade = new ArrayList<>();
+    private static boolean firstStage = false, secondStage = false, thirdStage = false;
 
 
     //---------------------------------------- INTERACTIVE MODE : MENU
@@ -17,7 +16,7 @@ public class Main {
         String str = ("Bienvenue dans notre outil de compression d'image !\n"
                 + "→ Nous vous invitons à presser une touche du clavier pour acceder au menu. Nous vous souhaitons une bonne découverte ! ");
 
-        System.out.println(str + "\n");
+        System.out.println(str);
         Scanner scan = new Scanner(System.in);
         String enter = scan.next();
         createMenu();
@@ -26,7 +25,7 @@ public class Main {
     private static void createMenu() throws IOException {
         listMenu = new ArrayList<String>();
 
-        listMenu.add("************************************* MENU *************************************\n\n");
+        listMenu.add("\n************************************* MENU *************************************\n\n");
         listMenu.add("\t 1. Charger une image PNG en mémoire dans un quadtree.\n");
         listMenu.add("\t 2. Appliquer une compression Delta pour un ∆ donné.\n");
         listMenu.add("\t 3. Appliquer une compression Phi pour un Φ donné.\n");
@@ -48,20 +47,15 @@ public class Main {
                 secondStage = true;
 
             } else if ( firstStage && secondStage && !thirdStage ) {
-                display = listMenu.get(0) + listMenu.get(1) + listMenu.get(2) + listMenu.get(3) + listMenu.get(4) + listMenu.get(5);
+                display = listMenu.get(0) + listMenu.get(1) + listMenu.get(2) + listMenu.get(3) + listMenu.get(4) + listMenu.get(5) + listMenu.get(6);
                 thirdStage = true;
 
-            } else if ( firstStage && secondStage && thirdStage && !fourthStage ) {
-                display = listMenu.get(0) + listMenu.get(1) + listMenu.get(2) + listMenu.get(3) + listMenu.get(4) + listMenu.get(5) + listMenu.get(6);
-                fourthStage = true;
-
-            } else if ( firstStage && secondStage && thirdStage && fourthStage   ) {
-                display = "Voullez-vous charger une nouvelle image ? ";
+            } else if ( firstStage && secondStage && thirdStage ) {
+                display = "Voullez-vous charger une nouvelle image ? "; //TODO VOIR CHOIX OUI NON
                 menuChoiceMade.clear();
-                firstStage = secondStage = thirdStage = fourthStage = false;
-                continueProgramm();
+                firstStage = secondStage = thirdStage = false;
+                //continueProgramm();
             }
-
         } else {
             display = listMenu.get(0) + listMenu.get(1);
         }
@@ -71,7 +65,7 @@ public class Main {
 
     //TODO voir si on eut sans appuyer sur la touche entrer selectionner une option !!
     private static void choiceOption() throws IOException {
-        System.out.println("→ A présent, choissisez quelle option entre 1 et 6 vous intérresse.");
+        System.out.println("→ A présent, choissisez quelle option vous intérresse.");
 
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();// TODO verifier qu'on entre bien un int
@@ -99,7 +93,7 @@ public class Main {
                 displayEQM(tree);
                 break;
             default:
-                System.out.println("Entrée invalide, veuillez refaire votre choix.");
+                System.out.println("ERREUR : Entrée invalide, veuillez refaire votre choix.");
                 choiceOption();
         }
         continueProgramm();
@@ -108,7 +102,7 @@ public class Main {
 
     private static void continueProgramm() throws IOException {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("\n→ Voulez-vous continuer ? ");
+        System.out.println("\n→ Voulez-vous continuer ? ( oui/non )");
         String responce = scanner.next();
 
         if(responce.equals("oui") || responce.equals("Oui") || responce.equals("OUI")){
@@ -118,7 +112,7 @@ public class Main {
             System.out.println("\nMerci, au revoir et à la prochaîne !\n");
             return;
         } else {
-            //TODO APPLER FONCTION
+            System.out.println("\nERREUR : Veuillez-taper soit oui soit non !\n");
             continueProgramm();
         }
     }
@@ -153,16 +147,13 @@ public class Main {
     }
 
     //---------------------------------------- EQM DISPLAY
-    public static String displayEQM(QuadTree tree) throws IOException {
-        String displayEQM = "";
+    public static void displayEQM(QuadTree tree) throws IOException {
 
-        displayEQM = "\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%";
-
-        return displayEQM;
+        System.out.println("\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%");
     }
 
     //------------------------------------------------------------ MAIN
-    // TODO ****************************************************************************************************
+    // TODO **************************************************************************************************
     //TODO ENREGISTRER LES SYSTEM DANS UNE VARIABLE
     // FAIRE SOU FONCTION DE CE MAIN ET RENVOYER LE STRING POUR AFFICHAGE DANS LE MAIN
     public static void main(String[] args) throws Exception {
@@ -186,8 +177,10 @@ public class Main {
             createPhiFile( phi, args[0], args[0]); //creation of phi PNG and text files
 
 
-            System.out.println("\n Comparaison fichiers Delta : " + displayEQM(deltaTree));
-            System.out.println("\n Comparaison fichiers Phi : " + displayEQM(phiTree));
+            System.out.print("\n Comparaison fichiers Delta : ");
+            displayEQM(deltaTree);
+            System.out.print("\n Comparaison fichiers Phi : ");
+            displayEQM(phiTree);
 
         } else {
             throw new Exception("Le nombre d'argument n'est pas le bon ! ");
@@ -199,7 +192,7 @@ public class Main {
     public static void loadImage(boolean b) throws IOException {
         Scanner scan = new Scanner(System.in);
 
-        System.out.println("Veuillez entrer le nom du fichier à tester. Pour cela, entrez uniquement le nom du fichier sans son extention.");
+        System.out.println("Veuillez entrer le nom ou le chemin de votre fichier à sauvegarder.");
         ///TODO EXPCETION VERIF BON NOM DE FICHIER +
         ///TODO VOIR SI ON APPELLE CETTE FONCTION DANS LE MODE NN INTERACTIF
 

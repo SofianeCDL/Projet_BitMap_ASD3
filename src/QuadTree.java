@@ -13,22 +13,22 @@ public class QuadTree {
 
     //Constructor 1
     public QuadTree(String imagePath) throws IOException {
-        this.northWest      = null;
-        this.northEast      = null;
-        this.southEast      = null;
-        this.southWest      = null;
+        this.northWest          = null;
+        this.northEast          = null;
+        this.southEast          = null;
+        this.southWest          = null;
 
-        this.father         = null;
+        this.father             = null;
 
-        this.leaf           = false;
+        this.leaf               = false;
 
-        this.color          = null;
+        this.color              = null;
 
-        this.imagePath      = imagePath;
+        this.imagePath          = imagePath;
 
         ImagePNG image = Main.loadImagePNG(imagePath);
 
-        this.compressImagePath  = "";
+        this.compressImagePath  = imagePath;
 
         this.createQuadTree(image, imagePath, 0, 0, image.width());
 
@@ -36,19 +36,19 @@ public class QuadTree {
 
     //Constructor 2
     private QuadTree(ImagePNG image, String imagePath, int x, int y, int sizeImage, QuadTree father) {
-        this.northWest      = null;
-        this.northEast      = null;
-        this.southEast      = null;
-        this.southWest      = null;
+        this.northWest          = null;
+        this.northEast          = null;
+        this.southEast          = null;
+        this.southWest          = null;
 
-        this.father         = father;
+        this.father             = father;
 
-        this.leaf           = false;
+        this.leaf               = false;
 
-        this.color          = null;
+        this.color              = null;
 
-        this.imagePath      = imagePath;
-        this.compressImagePath  = "";
+        this.imagePath          = imagePath;
+        this.compressImagePath  = imagePath;
 
         this.createQuadTree(image, imagePath, x, y, sizeImage);
 
@@ -373,14 +373,6 @@ public class QuadTree {
         ImagePNG image = Main.loadImagePNG(this.imagePath);
 
         this.compressionPNG(image, this, 0, 0, image.width());
-
-        if (filename.contains("/")) {
-            this.compressImagePath = filename;
-        } else if (filename.contains(".png")) {
-            this.compressImagePath = "SavePNG/" + filename;
-        } else {
-            this.compressImagePath = "SavePNG/" + filename + ".png";
-        }
 
         image.save(filename);
     }

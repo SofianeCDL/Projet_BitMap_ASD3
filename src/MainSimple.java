@@ -41,7 +41,7 @@ public class MainSimple {
 
         t2.savePNG("SavePNG/test2.png");
 
-        System.out.println(Main.displayEQM(t2));
+        Main.displayEQM(t2);
 
     }
 }
