@@ -87,7 +87,7 @@ public class QuadTree {
             this.southWest = new QuadTree(image, imagePath, newXSW, newYSW, newSizeImage, this); //Recursive of cutting South West.
 
 
-            if (this.northWest.isLeaf() && this.northEast.isLeaf() && this.southEast.isLeaf() && this.southWest.isLeaf()) {
+            if (this.northWest.isLeaf() && this.northEast.isLeaf() && this.southEast.isLeaf() && this.southWest.isLeaf()) { //lossless compression.
                 if (this.northWest.getColor().equals(this.northEast.getColor()) &&
                     this.northEast.getColor().equals(this.southEast.getColor()) &&
                     this.southEast.getColor().equals(this.southWest.getColor()) &&
@@ -226,6 +226,24 @@ public class QuadTree {
         return Math.max(maxNorth, maxSouth);
     }
 
+    private void maxColorimetricDifference(int delta, QuadTree tree) {
+        int colorimetricDifference = tree.maxColorimetricDifference();
+
+        if (colorimetricDifference <= delta) {
+            Color newColor =  tree.colorimetricAverage();
+
+            tree.setColor(newColor);
+
+            tree.setNorthWest(null);//All of sons becomes null
+            tree.setNorthEast(null);
+            tree.setSouthWest(null);
+            tree.setSouthEast(null);
+
+
+            tree.setLeaf(true);
+        }
+    }
+
     // ----------------------------------------------- COMPRESS DELTA -----------------------------------------------
 
     public void compressDelta(int delta) {
@@ -237,27 +255,9 @@ public class QuadTree {
      */
     private void compressDelta(int delta, QuadTree tree) {
 
-        if (tree.isLeaf()) {
-            return;
-        } else {
+        if (!tree.isLeaf()) {
             if (tree.verificationBound()) { //If all of sons are leaf
-
-                int colorimetricDifference = tree.maxColorimetricDifference();
-
-                if (colorimetricDifference <= delta) {
-                    Color newColor =  tree.colorimetricAverage();
-
-                    tree.setColor(newColor);
-
-                    tree.setNorthWest(null);//All of sons becomes null
-                    tree.setNorthEast(null);
-                    tree.setSouthWest(null);
-                    tree.setSouthEast(null);
-
-
-                    tree.setLeaf(true);
-                }
-
+                maxColorimetricDifference(delta, tree);
             } else {
                 compressDelta(delta, tree.getNorthWest());
                 compressDelta(delta, tree.getNorthEast());
@@ -265,27 +265,11 @@ public class QuadTree {
                 compressDelta(delta, tree.getSouthWest());
 
                 if (tree.verificationBound()) { //If all of sons are leaf
-
-                    int colorimetricDifference = tree.maxColorimetricDifference();
-
-                    if (colorimetricDifference <= delta) {
-                        Color newColor = tree.colorimetricAverage();
-
-                        tree.setColor(newColor);
-
-                        tree.setNorthWest(null);//All of sons becomes null
-                        tree.setNorthEast(null);
-                        tree.setSouthWest(null);
-                        tree.setSouthEast(null);
-
-
-                        tree.setLeaf(true);
-                    }
+                    maxColorimetricDifference(delta, tree);
                 }
            }
         }
     }
-
 
 
     // ----------------------------------------------- COMPRESS PHI -----------------------------------------------
@@ -340,12 +324,13 @@ public class QuadTree {
         }
     }
 
+    // ----------------------------------------------- LEAFS OPERATION -----------------------------------------------
+
     /**
      *
      * @param tree
-     * @return
      */
-    private QuadTree crushLeaf(QuadTree tree) {
+    private void crushLeaf(QuadTree tree) {
         Color newColor =  tree.colorimetricAverage();
 
         tree.setColor(newColor);
@@ -358,7 +343,6 @@ public class QuadTree {
 
         tree.setLeaf(true);
 
-        return tree;
     }
 
 
@@ -412,7 +396,7 @@ public class QuadTree {
      */
     private void compressionPNG(ImagePNG image, QuadTree arbre, int x, int y, int sizeImage) {
         if (arbre.isLeaf()) {
-            compressionBlockPNG(image, x, y, sizeImage, arbre.getColor());
+            crushPixelPNG(image, x, y, sizeImage, arbre.getColor());
         } else {
             int newSizeImage = sizeImage / 2; //Calculation of new size of childrens (North West, North East, South East and South West).
 
@@ -431,31 +415,27 @@ public class QuadTree {
     }
 
     ///TODO CHANGER NOM FONCTION
-    private void compressionBlockPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
+    private void crushPixelPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
 
-        /*if (x == x + sizeImage) {
-            //image.setPixel(x, y, new Color(0,0,0));
-            //compressionBlockPNG(image, x, y + 1, sizeImage, maxXY, rgb);
-        } else if (y == y + sizeImage) {
-            //image.setPixel(x, y, new Color(0,0,0));
-            //compressionBlockPNG(image, x + 1, y, sizeImage, maxXY, rgb);
+        if (x == x + sizeImage) {
+            image.setPixel(x, y, new Color(0,0,0));
         } else {
-            System.out.println("X = " + x + " / Y = " + y + " block" );
+            //System.out.println("X = " + x + " / Y = " + y + " block" );
 
             image.setPixel(x, y, new Color(0, 0, 0));
 
-            compressionBlockPNG(image, x + 1, y, sizeImage, rgb);
-            compressionBlockPNG(image, x, y + 1, sizeImage, rgb);
-        }*/
+            crushPixelPNG(image, x + 1, y, sizeImage, rgb);
+            crushPixelPNG(image, x, y + 1, sizeImage, rgb);
+        }
 
-        for (int i = x ; i < x + sizeImage ; ++i) {
+        /*for (int i = x ; i < x + sizeImage ; ++i) {
             for (int j = y ; j < y + sizeImage ; j++) {
                 image.setPixel(i, j, rgb);
             }
-        }
+        }*/
     }
 
-
+    // ----------------------------------------------- SAVE TXT -----------------------------------------------
 
     public void saveTXT(String location) {
         String quadTreeTXT = this.toString();
@@ -470,6 +450,8 @@ public class QuadTree {
             e.printStackTrace();
         }
     }
+
+    // ----------------------------------------------- EQM -----------------------------------------------
 
     public double EQM() throws IOException {
         ImagePNG imageOrigine = Main.loadImagePNG(this.imagePath);

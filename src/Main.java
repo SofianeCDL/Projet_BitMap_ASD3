@@ -127,7 +127,7 @@ public class Main {
 
     //---------------------------------------- CREATE FILE
     ///TODO BLOQUER DELTA ENTRE 0 ET 255 !!!!!!!!!!!!!!!!!!!!!!!!!
-    private static void createDeltaFile(int delta, String name, ImagePNG i) throws IOException {
+    private static void createDeltaFile(int delta, String name, String i) throws IOException {
         deltaTree = new QuadTree(i);
         deltaTree.compressDelta(delta);
 
@@ -136,7 +136,7 @@ public class Main {
     }
 
     ///TODO PHI > 0 !!!!!!!!!!!!!!!!!!!!!!!!!
-    private static void createPhiFile(int phi, String name, ImagePNG i) throws IOException {
+    private static void createPhiFile(int phi, String name, String i) throws IOException {
         phiTree = new QuadTree(i);
         phiTree.compressPhi(phi);
 
@@ -175,8 +175,8 @@ public class Main {
                     + "DELTA : SaveTXT/" + args[0] + "-delta" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-delta" + delta + ".png"
                     + "PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " +  "SavePNG/" + args[0] + "-phi" + phi + ".png" );
 
-            createDeltaFile(delta, args[0], i ); //creation of delta PNG and text files
-            createPhiFile( phi, args[0], i); //creation of phi PNG and text files
+            createDeltaFile(delta, args[0], args[0] ); //creation of delta PNG and text files
+            createPhiFile( phi, args[0], args[0]); //creation of phi PNG and text files
 
 
             System.out.println("\n Comparaison fichiers Delta : " + displayEQM(deltaTree));

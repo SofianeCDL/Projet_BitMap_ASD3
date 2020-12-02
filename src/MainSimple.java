@@ -35,7 +35,7 @@ public class MainSimple {
         //System.out.println(t.toString());
 
         System.out.println(t.numberLeafs(t));
-        t.compressDelta(60);
+        t.compressDelta(254);
         System.out.println(t.numberLeafs(t));
 
 
