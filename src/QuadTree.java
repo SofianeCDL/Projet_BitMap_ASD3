@@ -377,9 +377,9 @@ public class QuadTree {
         if (filename.contains("/")) {
             this.compressImagePath = filename;
         } else if (filename.contains(".png")) {
-            this.compressImagePath = "savePNG/" + filename;
+            this.compressImagePath = "SavePNG/" + filename;
         } else {
-            this.compressImagePath = "savePNG/" + filename + ".png";
+            this.compressImagePath = "SavePNG/" + filename + ".png";
         }
 
         image.save(filename);
@@ -395,7 +395,7 @@ public class QuadTree {
      */
     private void compressionPNG(ImagePNG image, QuadTree arbre, int x, int y, int sizeImage) {
         if (arbre.isLeaf()) {
-            crushPixelPNG(image, x, y, sizeImage, arbre.getColor());
+            crushPixelPNG(image, x, y, x, y, sizeImage, arbre.getColor());
         } else {
             int newSizeImage = sizeImage / 2; //Calculation of new size of childrens (North West, North East, South East and South West).
 
@@ -414,24 +414,36 @@ public class QuadTree {
     }
 
     ///TODO CHANGER NOM FONCTION
-    private void crushPixelPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
 
-        if (x == x + sizeImage) {
-            image.setPixel(x, y, new Color(0,0,0));
+    /**
+     *
+     * @param image
+     * @param x0
+     * @param y0
+     * @param x
+     * @param y
+     * @param sizeImage
+     * @param rgb
+     */
+    private void crushPixelPNG(ImagePNG image, int x0, int y0,  int x, int y, int sizeImage, Color rgb) {
+
+        /*if (x == x0 + sizeImage - 1 || y == y0 + sizeImage - 1) {
+            //System.out.println("X = " + x + " | Y = " + y + " block | sizeImage = " + sizeImage);
+            image.setPixel(x, y, rgb);
         } else {
-            //System.out.println("X = " + x + " / Y = " + y + " block" );
+            System.out.println("X = " + x + " | Y = " + y + " block | sizeImage = " + sizeImage);
 
-            image.setPixel(x, y, new Color(0, 0, 0));
+            image.setPixel(x, y, rgb);
 
-            crushPixelPNG(image, x + 1, y, sizeImage, rgb);
-            crushPixelPNG(image, x, y + 1, sizeImage, rgb);
-        }
+            crushPixelPNG(image, x0, y0, x + 1, y, sizeImage, rgb);
+            crushPixelPNG(image,x0, y0, x, y + 1, sizeImage, rgb);
+        }*/
 
-        /*for (int i = x ; i < x + sizeImage ; ++i) {
+        for (int i = x ; i < x + sizeImage ; ++i) {
             for (int j = y ; j < y + sizeImage ; j++) {
                 image.setPixel(i, j, rgb);
             }
-        }*/
+        }
     }
 
     // ----------------------------------------------- SAVE TXT -----------------------------------------------

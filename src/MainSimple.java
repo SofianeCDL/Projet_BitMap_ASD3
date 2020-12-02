@@ -6,9 +6,9 @@ public class MainSimple {
 
     public static void main(String[] args) throws IOException {
 
-        QuadTree t = new QuadTree("pngs/32-tux.png");
-        QuadTree t2 = new QuadTree("pngs/2_2.png");
-        QuadTree t3 = new QuadTree("pngs/2_3.png");
+       // QuadTree t = new QuadTree("pngs/32-tux.png");
+        QuadTree t2 = new QuadTree("pngs/16.png");
+        //QuadTree t3 = new QuadTree("pngs/2_3.png");
 
         /*System.out.println("t1 : " + t.toString() + " | t2 : " + t2.toString() + " | t3 : " + t3.toString());
 
@@ -34,14 +34,14 @@ public class MainSimple {
 
         //System.out.println(t.toString());
 
-        System.out.println(t.numberLeafs(t));
-        t.compressDelta(254);
-        System.out.println(t.numberLeafs(t));
+        System.out.println(t2.numberLeafs(t2));
+        t2.compressDelta(255);
+        System.out.println(t2.numberLeafs(t2));
 
 
-        t.savePNG("SavePNG/test2.png");
+        t2.savePNG("SavePNG/test2.png");
 
-        System.out.println(Main.displayEQM(t));
+        System.out.println(Main.displayEQM(t2));
 
     }
 }
