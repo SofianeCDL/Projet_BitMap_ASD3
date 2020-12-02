@@ -7,7 +7,7 @@ public class Main {
     //Variable
     static QuadTree tree, deltaTree, phiTree;
     static ArrayList listMenu, menuChoiceMade;
-    private static boolean firstStage = false, secondStage = false, thirdStage = false, thirdStage = false, fouthStage = false ;
+    private static boolean firstStage = false, secondStage = false, thirdStage = false, fouthStage = false ;
 
 
     //---------------------------------------- INTERACTIVE MODE : MENU
@@ -114,7 +114,7 @@ public class Main {
 
 
     //---------------------------------------- NON INTERACTIVE MODE : MENU
-    private static ImagePNG loadImage(String str) throws IOException {
+    private static ImagePNG loadImageNoINteractive(String str) throws IOException {
         String begin = "pngs/";
         String end = ".png";
         ImagePNG i = new ImagePNG(begin + str + end); //CHARGE UN IMAGE PNG
@@ -123,7 +123,7 @@ public class Main {
 
     //---------------------------------------- CREATE FILE
     ///TODO BLOQUER DELTA ENTRE 0 ET 255 !!!!!!!!!!!!!!!!!!!!!!!!!
-    private static void createDeltaFile(int delta, String name, ImagePNG i) throws IOException {
+    private static void createDeltaFile(int delta, String name, String i) throws IOException {
         deltaTree = new QuadTree(i);
         deltaTree.compressDelta(delta);
 
@@ -132,7 +132,7 @@ public class Main {
     }
 
     ///TODO PHI > 0 !!!!!!!!!!!!!!!!!!!!!!!!!
-    private static void createPhiFile(int phi, String name, ImagePNG i) throws IOException {
+    private static void createPhiFile(int phi, String name, String i) throws IOException {
         phiTree = new QuadTree(i);
         phiTree.compressPhi(phi);
 
@@ -163,7 +163,7 @@ public class Main {
         } else if ( args.length == 3 ) { //If we are in noninteractive mode
 
             System.out.println("Chargement de l'image...");
-            ImagePNG i = loadImage(args[0]); //TODO VERIFIER EXCEPTION BON NOM DE FICHIER
+            ImagePNG i = loadImagePNG(args[0]); //TODO VERIFIER EXCEPTION BON NOM DE FICHIER
 
             int delta = Integer.parseInt(args[1]);
             int phi = Integer.parseInt(args[2]);
@@ -171,8 +171,8 @@ public class Main {
                     + "DELTA : SaveTXT/" + args[0] + "-delta" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-delta" + delta + ".png"
                     + "PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " +  "SavePNG/" + args[0] + "-phi" + phi + ".png" );
 
-            createDeltaFile(delta, args[0], i ); //creation of delta PNG and text files
-            createPhiFile( phi, args[0], i); //creation of phi PNG and text files
+            createDeltaFile(delta, args[0],  args[0] ); //creation of delta PNG and text files
+            createPhiFile( phi, args[0],  args[0]); //creation of phi PNG and text files
 
 
             System.out.println("\n Comparaison fichiers Delta : " + displayEQM(deltaTree));
@@ -243,7 +243,7 @@ public class Main {
         tree.savePNG("SavePNG/" + nameTXT + ".png");
     }
 
-    public ImagePNG loadImagePNG(String imagePath) throws IOException {
+    public static ImagePNG loadImagePNG(String imagePath) throws IOException {
         if (imagePath.contains("/")) {
             return new ImagePNG(imagePath);
         } else if (imagePath.contains(".png")){

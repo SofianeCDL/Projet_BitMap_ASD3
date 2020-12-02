@@ -9,7 +9,7 @@ public class QuadTree {
     private boolean leaf;
 
     private String imagePath;
-    private ImagePNG compressImage;
+    private String compressImagePath;
 
     //Constructor 1
     public QuadTree(String imagePath) throws IOException {
@@ -26,9 +26,9 @@ public class QuadTree {
 
         this.imagePath      = imagePath;
 
-        ImagePNG image = Main.loadImage(imagePath);
+        ImagePNG image = Main.loadImagePNG(imagePath);
 
-        this.compressImage  = null;
+        this.compressImagePath  = "";
 
         this.createQuadTree(image, imagePath, 0, 0, image.width());
 
@@ -48,7 +48,7 @@ public class QuadTree {
         this.color          = null;
 
         this.imagePath      = imagePath;
-        this.compressImage  = null;
+        this.compressImagePath  = "";
 
         this.createQuadTree(image, imagePath, x, y, sizeImage);
 
@@ -305,36 +305,18 @@ public class QuadTree {
         Comparator<QuadTree> comparator = new QuadTreeComparator();
         TreeSet<QuadTree> listLeaf = new TreeSet<QuadTree>(comparator);
 
-        //ArrayList<QuadTree> listLeaf = new ArrayList<>();
-        //ArrayList<QuadTree> listNewLeaf = new ArrayList<>();
-
         this.compressPhiTri(tree, listLeaf); //fill listLeaf with leafs.
-
-         //initialize comparator of QuadTree.
-
-        //Collections.sort(listLeaf, comparator);//Sort automatically listLeaf.
 
         while (phi < numberLeaf && listLeaf.size() > 0) {
 
             QuadTree saveTree = listLeaf.first();
             listLeaf.remove(saveTree);
-            //System.out.println("The iterator values are: ");
-
-            //Output the first element of the array
 
             crushLeaf(saveTree);//and crush (see crush fonction).
-
-
-
-            if (listLeaf.contains(saveTree.father)) {
-                System.out.println("true");
-            }
-
 
             if (saveTree.getFather() != null && saveTree.getFather().verificationBound()) {
                 listLeaf.add(saveTree.getFather()); //Add in new listLeaf if the father has as a result of overwriting 4 sons.
             }
-
             numberLeaf -= 3;
         }
     }
@@ -405,12 +387,19 @@ public class QuadTree {
      * @throws IOException
      */
     public void savePNG(String filename) throws IOException {
-        ImagePNG imageClone = this.image.clone();
-        this.compressionPNG(imageClone, this, 0, 0, imageClone.width());
+        ImagePNG image = Main.loadImagePNG(this.imagePath);
 
-        this.compressImage = imageClone;
+        this.compressionPNG(image, this, 0, 0, image.width());
 
-        imageClone.save(filename);
+        if (filename.contains("/")) {
+            this.compressImagePath = filename;
+        } else if (filename.contains(".png")) {
+            this.compressImagePath = "savePNG/" + filename;
+        } else {
+            this.compressImagePath = "savePNG/" + filename + ".png";
+        }
+
+        image.save(filename);
     }
 
     /**
@@ -482,26 +471,10 @@ public class QuadTree {
         }
     }
 
-    public double EQM() {
-        return ImagePNG.computeEQM(this.image, this.compressImage);
-    }
+    public double EQM() throws IOException {
+        ImagePNG imageOrigine = Main.loadImagePNG(this.imagePath);
+        ImagePNG imageCompress = Main.loadImagePNG(this.compressImagePath);
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        QuadTree quadTree = (QuadTree) o;
-        return leaf == quadTree.leaf &&
-                Objects.equals(northWest, quadTree.northWest) &&
-                Objects.equals(northEast, quadTree.northEast) &&
-                Objects.equals(southEast, quadTree.southEast) &&
-                Objects.equals(southWest, quadTree.southWest) &&
-                Objects.equals(color, quadTree.color) &&
-                Objects.equals(image, quadTree.image);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(northWest, northEast, southEast, southWest, color, leaf, image);
+        return ImagePNG.computeEQM(imageOrigine,imageCompress);
     }
 }

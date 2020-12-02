@@ -5,7 +5,7 @@ import java.util.TreeSet;
 public class MainSimple {
 
     public static void main(String[] args) throws IOException {
-        ImagePNG i = new ImagePNG("pngs/32-tux.png"); //CHARGE UN IMAGE PNG
+        /*ImagePNG i = new ImagePNG("pngs/32-tux.png"); //CHARGE UN IMAGE PNG
         ImagePNG i2 = new ImagePNG("pngs/2_2.png"); //CHARGE UN IMAGE PNG
         ImagePNG i3 = new ImagePNG("pngs/2_3.png"); //CHARGE UN IMAGE PNG
 
@@ -37,14 +37,14 @@ public class MainSimple {
 
         //System.out.println(t.toString());
 
-        System.out.println(t.numberLeafs(t));
+        /*System.out.println(t.numberLeafs(t));
         t.compressPhi(250);
         System.out.println(t.numberLeafs(t));
 
 
         t.savePNG("SavePNG/test2.png");
 
-        System.out.println(Main.displayEQM(t));
+        System.out.println(Main.displayEQM(t));*/
 
     }
 }
