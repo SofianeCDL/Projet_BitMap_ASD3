@@ -7,7 +7,7 @@ public class Main {
     //Variable
     private static QuadTree tree, deltaTree, phiTree;
     private static ArrayList<String> listMenu;
-    private static ArrayList<Integer> menuChoiceMade = new ArrayList<>();
+    private static final ArrayList<Integer> menuChoiceMade = new ArrayList<>();
     private static boolean firstStage = false, secondStage = false, thirdStage = false;
 
 
@@ -23,7 +23,7 @@ public class Main {
     }
 
     private static void createMenu() throws IOException {
-        listMenu = new ArrayList<String>();
+        listMenu = new ArrayList<>();
 
         listMenu.add("\n************************************* MENU *************************************\n\n");
         listMenu.add("\t 1. Charger une image PNG en mémoire dans un quadtree.\n");
