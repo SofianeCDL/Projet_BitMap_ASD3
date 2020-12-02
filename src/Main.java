@@ -39,15 +39,15 @@ public class Main {
     private static void displayCorrectMenu(){
 
         if ( menuChoiceMade.size() != 0 ) {
-            if ( firstStage == true && secondStage == false ){
+            if ( firstStage && !secondStage){
                 System.out.println(listMenu.get(0));//Display
                 System.out.println(listMenu.get(1));
                 System.out.println(listMenu.get(2));//Display
                 System.out.println(listMenu.get(3));
 
-            } else if ( firstStage == true && secondStage == true && thirdStage == false  ) {
+            } else if ( firstStage && secondStage && !thirdStage) {
 
-            } else if ( firstStage == true && secondStage == true && thirdStage == true  ) {
+            } else if ( firstStage && secondStage && thirdStage) {
 
             }
 
