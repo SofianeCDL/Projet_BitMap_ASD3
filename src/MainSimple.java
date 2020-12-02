@@ -7,7 +7,7 @@ public class MainSimple {
     public static void main(String[] args) throws IOException {
 
        // QuadTree t = new QuadTree("pngs/32-tux.png");
-        QuadTree t2 = new QuadTree("pngs/16.png");
+        QuadTree t2 = new QuadTree("32-tux");
         //QuadTree t3 = new QuadTree("pngs/2_3.png");
 
         /*System.out.println("t1 : " + t.toString() + " | t2 : " + t2.toString() + " | t3 : " + t3.toString());
