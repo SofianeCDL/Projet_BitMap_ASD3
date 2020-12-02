@@ -1,14 +1,16 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
     //Variable
     static QuadTree tree, deltaTree, phiTree;
-    boolean b = false;
+    static ArrayList listMenu, menuChoiceMade;
+    private static boolean firstStage = false, secondStage = false, thirdStage = false, thirdStage = false, fouthStage = false ;
 
 
-    //---------------------------------------- TEXT DISPLAY
+    //---------------------------------------- INTERACTIVE MODE : MENU
     private static void welcome() throws IOException {
         String str = ("Bienvenue dans notre outil de compression d'image !\n"
                 + "→ Nous vous invitons à presser une touche du clavier pour acceder au menu. Nous vous souhaitons une bonne découverte ! ");
@@ -16,54 +18,57 @@ public class Main {
         System.out.println(str + "\n\n");
         Scanner scan = new Scanner(System.in);
         String enter = scan.next();
-        displayMenu();
+        createMenu();
     }
 
-    private static void displayMenu() throws IOException {
-            System.out.println( "************************************* MENU *************************************\n\n"
-                + "\t 1. Charger une image PNG en mémoire dans un quadtree.\n"
-                + "\t 2. Appliquer une compression Delta pour un ∆ donné.\n"
-                + "\t 3. Appliquer une compression Phi pour un Φ donné.\n"
-                + "\t 4. Sauvegarder le quadtree dans un fichier PNG.\n"
-                + "\t 5. Sauvegarder la représentation textuelle du quadtree dans un fichier TXT.\n"
-                + "\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n" );
+    private static void createMenu() throws IOException {
+        listMenu = new ArrayList<String>();
 
-            choiceOption();
+        listMenu.add("************************************* MENU *************************************\n\n");
+        listMenu.add("\t 1. Charger une image PNG en mémoire dans un quadtree.\n");
+        listMenu.add("\t 2. Appliquer une compression Delta pour un ∆ donné.\n");
+        listMenu.add("\t 3. Appliquer une compression Phi pour un Φ donné.\n");
+        listMenu.add("\t 4. Sauvegarder le quadtree dans un fichier PNG.\n");
+        listMenu.add("\t 5. Sauvegarder la représentation textuelle du quadtree dans un fichier TXT.\n");
+        listMenu.add("\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n");
+
+        //System.out.println(listMenu.toString());
+        choiceOption();
     }
 
-    //---------------------------------------- EQM DISPLAY
-    public static String displayEQM(QuadTree tree) throws IOException {
-        String displayEQM = "";
+    private static void displayCorrectMenu(){
 
-        displayEQM = "\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%";
+        if ( menuChoiceMade.size() != 0 ) {
+            if ( firstStage == true && secondStage == false ){
+                System.out.println(listMenu.get(0));//Display
+                System.out.println(listMenu.get(1));
+                System.out.println(listMenu.get(2));//Display
+                System.out.println(listMenu.get(3));
 
-        return displayEQM;
-    }
+            } else if ( firstStage == true && secondStage == true && thirdStage == false  ) {
 
-    private static void continueProgramm() throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Voulez-vous continuer ? ");
-        String responce = scanner.next();
+            } else if ( firstStage == true && secondStage == true && thirdStage == true  ) {
 
-        if(responce.equals("oui") || responce.equals("Oui") || responce.equals("OUI")){
-            displayMenu();
-        } else if (responce.equals("non") || responce.equals("Non") || responce.equals("NON")) {
-            return;
+            }
+
         } else {
-            continueProgramm();
+            System.out.println(listMenu.get(0));//Display
+            System.out.println(listMenu.get(1));
+
         }
     }
 
-    //---------------------------------------- Interactive mode
     //TODO voir si on eut sans appuyer sur la touche entrer selectionner une option !!
     private static void choiceOption() throws IOException {
-        System.out.println("\t → A présent, choissisez quelle option entre 1 et 6 vous intérresse.");
+        System.out.println("→ A présent, choissisez quelle option entre 1 et 6 vous intérresse.");
 
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
+        menuChoiceMade.add(choice);//We store the selection to display the correct options in the menu
 
         switch(choice){
             case 1:
+                firstStage = true;
                 boolean b = false;
                 loadImage(b);
                 break;
@@ -89,7 +94,26 @@ public class Main {
         continueProgramm();
     }
 
-    //---------------------------------------- image
+
+    private static void continueProgramm() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\n→ Voulez-vous continuer ? ");
+        String responce = scanner.next();
+
+        if(responce.equals("oui") || responce.equals("Oui") || responce.equals("OUI")){
+            //TODO CONTINUER LE PROGRAMME EN FONCTION DES CHOIX EFFECTUES
+            createMenu();
+        } else if (responce.equals("non") || responce.equals("Non") || responce.equals("NON")) {
+            System.out.println("\nMerci, au revoir et à la prochaîne !\n");
+            return;
+        } else {
+            //TODO APPLER FONCTION
+            continueProgramm();
+        }
+    }
+
+
+    //---------------------------------------- NON INTERACTIVE MODE : MENU
     private static ImagePNG loadImage(String str) throws IOException {
         String begin = "pngs/";
         String end = ".png";
@@ -97,6 +121,7 @@ public class Main {
         return i;
     }
 
+    //---------------------------------------- CREATE FILE
     ///TODO BLOQUER DELTA ENTRE 0 ET 255 !!!!!!!!!!!!!!!!!!!!!!!!!
     private static void createDeltaFile(int delta, String name, ImagePNG i) throws IOException {
         deltaTree = new QuadTree(i);
@@ -114,6 +139,15 @@ public class Main {
         phiTree.saveTXT("SaveTXT/" + name + "-phi" + phi + ".txt");
         phiTree.savePNG("SavePNG/" + name + "-phi" + phi + ".png");
 
+    }
+
+    //---------------------------------------- EQM DISPLAY
+    public static String displayEQM(QuadTree tree) throws IOException {
+        String displayEQM = "";
+
+        displayEQM = "\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%";
+
+        return displayEQM;
     }
 
     //------------------------------------------------------------ MAIN
@@ -134,8 +168,8 @@ public class Main {
             int delta = Integer.parseInt(args[1]);
             int phi = Integer.parseInt(args[2]);
             System.out.println("\nCréation des fichiers \n"
-                               + "DELTA : SaveTXT/" + args[0] + "-delta" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-delta" + delta + ".png"
-                               + "PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " +  "SavePNG/" + args[0] + "-phi" + phi + ".png" );
+                    + "DELTA : SaveTXT/" + args[0] + "-delta" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-delta" + delta + ".png"
+                    + "PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " +  "SavePNG/" + args[0] + "-phi" + phi + ".png" );
 
             createDeltaFile(delta, args[0], i ); //creation of delta PNG and text files
             createPhiFile( phi, args[0], i); //creation of phi PNG and text files
@@ -154,21 +188,21 @@ public class Main {
     public static void loadImage(boolean b) throws IOException {
         Scanner scan = new Scanner(System.in);
 
-        //TODO Prendre en compte que l'utilisateur decide de ou il veux prendre son image.
-
-        System.out.println("Veuillez entrer le nom du fichier à tester : ");///TODO EXPCETION VERIF BON NOM DE FICHIER
+        System.out.println("Veuillez entrer le nom du fichier à tester. Pour cela, entrez uniquement le nom du fichier sans son extention.");
+        ///TODO EXPCETION VERIF BON NOM DE FICHIER +
         ///TODO VOIR SI ON APPELLE CETTE FONCTION DANS LE MODE NN INTERACTIF
+
         try {
-            String str = scan.next();
+            String fileName = scan.next();
 
             String begin = "pngs/";
             String end = ".png";
 
 
-            ImagePNG i = new ImagePNG(begin+str+end); //CHARGE UN IMAGE PNG
+            ImagePNG i = new ImagePNG(begin+fileName+end); //CHARGE UN IMAGE PNG
 
             tree = new QuadTree(i);
-            System.out.println("\nAFFICHAGE ARBRE DE LA PHOTO : " + str );
+            System.out.println("\nAFFICHAGE ARBRE DE LA PHOTO : " + fileName + "\n" );
             b = true;
             System.out.println(tree.toString());
 
@@ -201,7 +235,6 @@ public class Main {
     }
 
     private static void savePNG() throws IOException {
-        //TODO Prendre en compte que l'utilisateur decide de ou il veux enregistrer son image.
         Scanner scan = new Scanner(System.in);
         System.out.println("Choissisez votre nom de fichier PNG : ");
         String namePNG = scan.next();
@@ -209,7 +242,6 @@ public class Main {
     }
 
     private static void saveTXT() throws IOException {
-        //TODO Prendre en compte que l'utilisateur decide de ou il veux enregistrer son txt.
         Scanner scan = new Scanner(System.in);
         System.out.println("Choissisez votre nom de fichier TXT : ");
         String nameTXT = scan.next();
