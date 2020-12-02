@@ -362,10 +362,7 @@ public class QuadTree {
     }
 
     // ----------------------------------------------- SAVE PNG -----------------------------------------------
-
-
     /**
-     *
      * @param filename
      * @throws IOException
      */
@@ -385,8 +382,7 @@ public class QuadTree {
         image.save(filename);
     }
 
-    /**
-     *
+    /** @role :
      * @param image
      * @param arbre
      * @param x
@@ -416,7 +412,7 @@ public class QuadTree {
     ///TODO CHANGER NOM FONCTION
     private void crushPixelPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
 
-        if (x == x + sizeImage) {
+        /*if (x == x + sizeImage) {
             image.setPixel(x, y, new Color(0,0,0));
         } else {
             //System.out.println("X = " + x + " / Y = " + y + " block" );
@@ -425,13 +421,13 @@ public class QuadTree {
 
             crushPixelPNG(image, x + 1, y, sizeImage, rgb);
             crushPixelPNG(image, x, y + 1, sizeImage, rgb);
-        }
+        }*/
 
-        /*for (int i = x ; i < x + sizeImage ; ++i) {
+        for (int i = x ; i < x + sizeImage ; ++i) {
             for (int j = y ; j < y + sizeImage ; j++) {
                 image.setPixel(i, j, rgb);
             }
-        }*/
+        }
     }
 
     // ----------------------------------------------- SAVE TXT -----------------------------------------------
