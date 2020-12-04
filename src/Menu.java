@@ -9,8 +9,6 @@ public class Menu {
     public static final String GREEN = "\033[0;32m"; //Color green
     public static final String RESET = "\033[0m";  //Reset color
 
-
-public class Menu {
     private final ArrayList<String> listMenu;
     private boolean compressMenu, saveMenu, isCompress;
     private QuadTree tree;
@@ -209,7 +207,7 @@ public class Menu {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choissisez votre nom de fichier PNG : ");
         String namePNG = scan.next();
-        this.tree.savePNG("SavePNG/" + namePNG + ".png");
+        this.tree.savePNG(namePNG);
     }
 
     /**
@@ -313,7 +311,7 @@ public class Menu {
      * @throws IOException
      */
     public void displayEQM(QuadTree tree) throws IOException {
-        System.out.println("\nECART QUADRATIIQUE MOYEN : " + tree.EQM() + "%");
+        tree.EQM();
     }
 
     /** @role :
@@ -321,7 +319,7 @@ public class Menu {
      *  @return
      *  @throws IOException
      */
-    public static ImagePNG loadImagePNG(String imagePath) throws IOException {
+    public ImagePNG loadImagePNG(String imagePath) throws IOException {
         if (imagePath.contains("/")) {
             return new ImagePNG(imagePath);
         } else if (imagePath.contains(".png")){

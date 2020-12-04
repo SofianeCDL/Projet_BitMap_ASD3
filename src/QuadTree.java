@@ -389,17 +389,7 @@ public class QuadTree {
 
         this.compressionPNG(image, this, 0, 0, image.width());
 
-        image.save(filename);
-    }
-
-    private void initImageCompressPath() {
-       if (imagePath.contains(".png")){
-            String compressPathSave = this.compressImagePath;
-            this.compressImagePath  = "pngs/" + compressPathSave;
-        } else if (!imagePath.contains("/")) {
-            String compressPathSave = this.compressImagePath;
-            this.compressImagePath  = "pngs/" + compressPathSave + ".png";
-        }
+        image.save(constructionPath(filename));
     }
 
     /** @role : Recursively cycle through the tree and overwrite identical pixel packets with the help of crushPixelPNG.
@@ -412,7 +402,7 @@ public class QuadTree {
      */
     private void compressionPNG(ImagePNG image, QuadTree arbre, int x, int y, int sizeImage) {
         if (arbre.isLeaf()) {
-            crushPixelPNG(image, x, y, x, y, sizeImage, arbre.getColor());
+            crushPixelPNG(image, x, y, sizeImage, arbre.getColor());
         } else {
             int newSizeImage = sizeImage / 2; //Calculation of new size of childrens (North West, North East, South East and South West).
 
@@ -432,16 +422,13 @@ public class QuadTree {
 
     /** @role : overwrite pixels of identical packet.
      *
-     * @param image
-     * @param x0
-     * @param y0
-     * @param x
-     * @param y
-     * @param sizeImage
-     * @param rgb
+     * @param image image to overwrite.
+     * @param x top left position x of the pixel to be overwritten
+     * @param y top left position y of the pixel to be overwritten.
+     * @param sizeImage pixel packet size to be overwritten.
+     * @param rgb pixel color.
      */
-    private void crushPixelPNG(ImagePNG image, int x0, int y0,  int x, int y, int sizeImage, Color rgb) {
-
+    private void crushPixelPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
         for (int i = x ; i < x + sizeImage ; ++i) {
             for (int j = y ; j < y + sizeImage ; j++) {
                 image.setPixel(i, j, rgb);
@@ -472,12 +459,8 @@ public class QuadTree {
         ImagePNG imageCompress = new ImagePNG(this.compressImagePath);
 
         File imageOrigineFile    =    new File(this.imagePath);
-        System.out.println(this.compressImagePath);
         File imageCompressFile   =    new File(this.compressImagePath);
 
-        System.out.println(imageOrigineFile.getAbsolutePath());
-        System.out.println(imageCompressFile.getAbsolutePath());
-        System.out.println(imageCompressFile.getName());
         double EQMImage = ImagePNG.computeEQM(imageOrigine,imageCompress);
         double sizeImageComparaison = Math.ceil(10000.0*imageCompressFile.length() / imageOrigineFile.length())/100.0;
 
