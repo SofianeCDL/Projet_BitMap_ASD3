@@ -33,7 +33,6 @@ public class Main {
         listMenu.add("\t 5. Sauvegarder la représentation textuelle du quadtree dans un fichier TXT.\n");
         listMenu.add("\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n");
 
-        //System.out.println(listMenu.toString());
         displayCorrectMenu();
         choiceOption();
     }
