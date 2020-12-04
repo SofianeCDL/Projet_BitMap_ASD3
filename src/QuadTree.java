@@ -15,7 +15,7 @@ public class QuadTree {
     private boolean leaf;
 
     private final String imagePath;
-    private final String compressImagePath;
+    private String compressImagePath;
 
     //Constructor 1
     public QuadTree(String imagePath) throws IOException {
@@ -30,9 +30,11 @@ public class QuadTree {
 
         this.color              = null;
 
-        this.imagePath          = imagePath;
 
-        ImagePNG image = Main.loadImagePNG(imagePath);
+
+        this.imagePath          = constructionPath(imagePath);
+
+        ImagePNG image          = Main.loadImagePNG(imagePath);
 
         this.compressImagePath  = imagePath;
 
@@ -385,10 +387,21 @@ public class QuadTree {
      */
     public void savePNG(String filename) throws IOException {
         ImagePNG image = Main.loadImagePNG(this.imagePath);
+         this.compressImagePath = filename;
 
         this.compressionPNG(image, this, 0, 0, image.width());
 
         image.save(filename);
+    }
+
+    private void initImageCompressPath() {
+       if (imagePath.contains(".png")){
+            String compressPathSave = this.compressImagePath;
+            this.compressImagePath  = "pngs/" + compressPathSave;
+        } else if (!imagePath.contains("/")) {
+            String compressPathSave = this.compressImagePath;
+            this.compressImagePath  = "pngs/" + compressPathSave + ".png";
+        }
     }
 
     /** @role : Recursively cycle through the tree and overwrite identical pixel packets with the help of crushPixelPNG.
@@ -456,10 +469,31 @@ public class QuadTree {
 
     // ----------------------------------------------- EQM -----------------------------------------------
 
-    public double EQM() throws IOException {
+    public void EQM() throws IOException {
         ImagePNG imageOrigine = Main.loadImagePNG(this.imagePath);
-        ImagePNG imageCompress = Main.loadImagePNG(this.compressImagePath);
+        ImagePNG imageCompress = new ImagePNG(this.compressImagePath);
 
-        return ImagePNG.computeEQM(imageOrigine,imageCompress);
+        File imageOrigineFile    =    new File(this.imagePath);
+        System.out.println(this.compressImagePath);
+        File imageCompressFile   =    new File(this.compressImagePath);
+
+        System.out.println(imageOrigineFile.getAbsolutePath());
+        System.out.println(imageCompressFile.getAbsolutePath());
+        System.out.println(imageCompressFile.getName());
+        double EQMImage = ImagePNG.computeEQM(imageOrigine,imageCompress);
+        double sizeImageComparaison = Math.ceil(10000.0*imageCompressFile.length() / imageOrigineFile.length())/100.0;
+
+        System.out.println("Image: taille = " + sizeImageComparaison + "% / qualité = " + EQMImage + "%");
+    }
+
+    private String constructionPath(String path) {
+
+        if (!path.contains("/") && !path.contains(".png")) {
+            return "pngs/" + path + ".png";
+        } else if (!path.contains("/")){
+            return "pngs/" + path;
+        } else {
+            return path;
+        }
     }
 }
