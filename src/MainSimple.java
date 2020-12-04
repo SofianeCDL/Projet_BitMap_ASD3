@@ -70,14 +70,18 @@ public class MainSimple {
     public static void main(String[] args) throws IOException {
 
         Menu m = new Menu();
-
         m.startProgramme();
 
-        //QuadTree t = new QuadTree("1024-cube");
 
-        //long dep = System.currentTimeMillis();
-        //t.compressPhi(150);
-        //System.out.println((System.currentTimeMillis() - dep) / 1000.0);
+
+
+
+        /*long dep = System.currentTimeMillis();
+        QuadTree t = new QuadTree("1024-cube");
+        t.compressPhi(100);
+        t.savePNG("SavePNG/test.png");
+        t.EQM();
+        System.out.println((System.currentTimeMillis() - dep) / 1000.0);*/
         //t.savePNG("SavePNG/test.png");
 
 

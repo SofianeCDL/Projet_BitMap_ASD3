@@ -149,7 +149,7 @@ public class Main {
     //---------------------------------------- EQM DISPLAY
     public static void displayEQM(QuadTree tree) throws IOException {
 
-        System.out.println("\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%");
+       // System.out.println("\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%");
     }
 
     //------------------------------------------------------------ MAIN

@@ -41,7 +41,10 @@ public class Menu {
 
                 //TODO préciser dans le readMe soit indiquer chemin (mettre exemple) soit juste le nom de l'image si elle se trouve dans pngs
 
+
                 this.tree = new QuadTree(imagePath);
+
+                System.out.println("lllllllllllll");
                 this.compressMenu = true;
                 startProgramme();
             } catch(Exception e ) {
@@ -294,7 +297,7 @@ public class Menu {
      * @throws IOException
      */
     public void displayEQM(QuadTree tree) throws IOException {
-        System.out.println("\nECART QUATRADIQUE MOYEN : " + tree.EQM() + "%");
+        tree.EQM();
     }
 
     /**
