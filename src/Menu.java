@@ -17,18 +17,20 @@ public class Menu {
     public Menu() {
 
         this.compressMenu = false;
-        this.saveMenu     = false;
-        this.isCompress   = false;
+        this.saveMenu = false;
+        this.isCompress = false;
 
-        this.listMenu     = new ArrayList<>();
+        this.listMenu = new ArrayList<>();
 
-        this.tree         = null;
+        this.tree = null;
 
     }
 
     //---------------------------------------- INTERACTIVE MODE
-    /** @role :
-     *  @throws IOException
+
+    /**
+     * @throws IOException
+     * @role :
      */
     public void startProgramme() throws IOException {
 
@@ -36,7 +38,7 @@ public class Menu {
         if (!this.compressMenu && !this.saveMenu) {
             try {
                 System.out.println("Bonjour, bienvenue dans notre outil de compression d'image !\n" +
-                "→ Nous vous invitons à charger une image (indiquez le nom du fichier ou chemin d'accès du fichier) en mémoire pour acceder au menu.\nNous vous souhaitons une bonne découverte !\n");
+                        "→ Nous vous invitons à charger une image (indiquez le nom du fichier ou chemin d'accès du fichier) en mémoire pour acceder au menu.\nNous vous souhaitons une bonne découverte !\n");
 
                 Scanner scan = new Scanner(System.in);//we scan the user's keyboard input
                 String imagePath = scan.next();
@@ -45,7 +47,7 @@ public class Menu {
                 this.tree = new QuadTree(imagePath);
                 this.compressMenu = true;
                 startProgramme();
-            } catch(IOException e ) {
+            } catch (IOException e) {
                 System.out.println(RED + "/!\\ ERREUR : Le nom du fichier est incorrect ! " + RESET);
                 programmeError();
                 throw e;
@@ -56,30 +58,31 @@ public class Menu {
         }
     }
 
-    /** @role : This function enables
-     *
-     *  @throws IOException
+    /**
+     * @throws IOException
+     * @role : This function enables
      */
     private void programmeError() throws IOException {
         try {
-            System.out.println("\n→ Nous vous invitons à re-donner le noms de votre image pour acceder au menu.");
+            System.out.println("\n→ Nous vous invitons à re-donner le nom de votre image pour acceder au menu.");
             Scanner scan = new Scanner(System.in);
             String imagePath = scan.next();
             this.tree = new QuadTree(imagePath);
 
-        } catch(IOException e ) {
+        } catch (IOException e) {
             System.out.println(RED + "/!\\ ERREUR : Le nom du fichier est incorrect ! " + RESET);
             programmeError();
             throw e;
-        } finally {
+        }
             this.compressMenu = true;
             startProgramme();
-        }
     }
 
 
     //TODO voir si on eut sans appuyer sur la touche entrer selectionner une option !!
-    /** @role :
+
+    /** @role
+     *
      * @throws IOException
      */
     private void choiceOption() throws IOException {
@@ -88,7 +91,7 @@ public class Menu {
         Scanner scanner = new Scanner(System.in);
         String choice = scanner.next();// TODO verifier qu'on entre bien un int
 
-        switch(choice){
+        switch (choice) {
             case "0":
                 exit();
                 break;
@@ -170,13 +173,14 @@ public class Menu {
 
         try {
             delta = scan.nextInt();
-            while ( delta < 0 || delta > 255 ){
+            while (delta < 0 || delta > 255) {
                 System.out.println(RED + "/!\\ ERREUR : Entrée invalide, veuillez re-donner un delta." + RESET);
+                delta = scan.nextInt();
             }
 
-            this.tree.compressDelta(delta);
+            this.tree.compressDelta(delta);//We applied compression
 
-        } catch(InputMismatchException eDelta ) {
+        } catch (InputMismatchException eDelta) {
             System.out.println(RED + "/!\\ ERREUR : Il faut un entier entre 0 et 255 ! " + RESET);
             compressDelta();
             throw eDelta;
@@ -184,24 +188,37 @@ public class Menu {
         startProgramme();
     }
 
-    public void errorDelta(){
-        System.out.println("/!\\ ERREUR : Veuillez-réécrie un entier entre 0 et 255 !  ");
 
-    }
-
-    /**
+    /** @role
      *
      */
-    public void compressPhi() {
+    public void compressPhi() throws InputMismatchException, IOException {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Choissisez votre phi pour la compression : ");
-        int phi = scan.nextInt();
-        this.tree.compressPhi(phi);
+        int phi;
+
+        System.out.println("Choissisez votre phi (un entier strictement supérieur à 0) pour la compression : ");
+
+        try {
+            phi = scan.nextInt();
+            while (phi < 0 || phi > 255) {
+                System.out.println(RED + "/!\\ ERREUR : Entrée invalide, veuillez re-donner un phi." + RESET);
+                phi = scan.nextInt();
+            }
+
+            this.tree.compressPhi(phi);//We applied compression
+
+        } catch (InputMismatchException ePhi) {
+            System.out.println(RED + "/!\\ ERREUR : Il faut un entier strictement supérieur à 0 ! " + RESET);
+            compressPhi();
+            throw ePhi;
+        }
+        startProgramme();
     }
 
-    /**
+
+    /** @role
      *
-     * @throws IOException
+     *  @throws IOException
      */
     private void savePNG() throws IOException {
         Scanner scan = new Scanner(System.in);
@@ -210,18 +227,19 @@ public class Menu {
         this.tree.savePNG(namePNG);
     }
 
-    /**
+    /** @role
      *
-     * @throws IOException
+     *  @throws IOException
      */
     private void saveTXT() throws IOException {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choissisez votre nom de fichier TXT : ");
         String nameTXT = scan.next();
         this.tree.saveTXT("SaveTXT/" + nameTXT + ".txt");
+        startProgramme();
     }
 
-    /**
+    /** @role
      *
      * @throws IOException
      */
@@ -243,8 +261,9 @@ public class Menu {
         }
     }
 
-    /**
+    /** @role
      *
+     * @param
      */
     private void displayMenu() {
         for (String option : this.listMenu) {
@@ -254,9 +273,11 @@ public class Menu {
 
 
     //---------------------------------------- NON INTERACTIVE MODE
-    /** @role :
-     *  @param args
-     *  @throws IOException */
+    /** @role
+     * @param args
+     * @throws IOException
+     *
+     */
     public void noInteractiveProgramme(String[] args) throws IOException {
         createDeltaFile(Integer.parseInt(args[1]), args[0], args[0]);
         createPhiFile(Integer.parseInt(args[2]), args[0], args[0]);
@@ -267,11 +288,11 @@ public class Menu {
     //---------------------------------------- CREATE FILE
     ///TODO BLOQUER DELTA ENTRE 0 ET 254 !!!!!!!!!!!!!!!!!!!!!!!!!
 
-    /** @role :
-     * @param delta
-     * @param name
-     * @param imagePath
-     * @throws IOException
+    /** @role
+     *  @param delta
+     *  @param name
+     *  @param imagePath
+     *  @throws IOException
      */
     private void createDeltaFile(int delta, String name, String imagePath) throws IOException {
         QuadTree deltaTree = new QuadTree(imagePath);
@@ -287,7 +308,6 @@ public class Menu {
     ///TODO PHI > 0 !!!!!!!!!!!!!!!!!!!!!!!!!
 
     /**
-     *
      * @param phi
      * @param name
      * @param imagePath
@@ -306,26 +326,29 @@ public class Menu {
     }
 
     /**
-     *
      * @param tree
      * @throws IOException
+     * @role :
      */
     public void displayEQM(QuadTree tree) throws IOException {
         tree.EQM();
     }
 
-    /** @role :
-     *  @param imagePath
-     *  @return
-     *  @throws IOException
+    /**
+     * @param imagePath
+     * @return
+     * @throws IOException
+     * @role :
      */
     public ImagePNG loadImagePNG(String imagePath) throws IOException {
         if (imagePath.contains("/")) {
             return new ImagePNG(imagePath);
-        } else if (imagePath.contains(".png")){
+        } else if (imagePath.contains(".png")) {
             return new ImagePNG("pngs/" + imagePath);
         } else {
             return new ImagePNG("pngs/" + imagePath + ".png");
         }
     }
-}
+
+
+}//END
