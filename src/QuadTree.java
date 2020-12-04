@@ -166,6 +166,10 @@ public class QuadTree {
 
     // ----------------------------------------------- VERIFICATION -----------------------------------------------
 
+    /**
+     *
+     * @return
+     */
     public boolean verificationBound() {
         return !this.isLeaf() && this.getNorthEast().isLeaf() && this.getNorthWest().isLeaf() && this.getSouthWest().isLeaf() && this.getSouthEast().isLeaf();
     }
@@ -226,6 +230,11 @@ public class QuadTree {
         return Math.max(maxNorth, maxSouth);
     }
 
+    /**
+     *
+     * @param delta
+     * @param tree
+     */
     private void maxColorimetricDifference(int delta, QuadTree tree) {
         int colorimetricDifference = tree.maxColorimetricDifference();
 
@@ -274,6 +283,10 @@ public class QuadTree {
 
     // ----------------------------------------------- COMPRESS PHI -----------------------------------------------
 
+    /**
+     *
+     * @param phi
+     */
     public void compressPhi(int phi) {
         compressPhi(this, phi);
     }
@@ -291,7 +304,7 @@ public class QuadTree {
 
         this.compressPhiTri(tree, listLeaf); //fill listLeaf with leafs.
 
-        while (phi < numberLeaf && listLeaf.size() > 0) {
+        while (phi < numberLeaf) {
 
             QuadTree saveTree = listLeaf.first();
             listLeaf.remove(saveTree);
@@ -417,18 +430,6 @@ public class QuadTree {
      * @param rgb
      */
     private void crushPixelPNG(ImagePNG image, int x0, int y0,  int x, int y, int sizeImage, Color rgb) {
-
-        /*if (x == x0 + sizeImage - 1 || y == y0 + sizeImage - 1) {
-            //System.out.println("X = " + x + " | Y = " + y + " block | sizeImage = " + sizeImage);
-            image.setPixel(x, y, rgb);
-        } else {
-            System.out.println("X = " + x + " | Y = " + y + " block | sizeImage = " + sizeImage);
-
-            image.setPixel(x, y, rgb);
-
-            crushPixelPNG(image, x0, y0, x + 1, y, sizeImage, rgb);
-            crushPixelPNG(image,x0, y0, x, y + 1, sizeImage, rgb);
-        }*/
 
         for (int i = x ; i < x + sizeImage ; ++i) {
             for (int j = y ; j < y + sizeImage ; j++) {
