@@ -222,7 +222,7 @@ public class Menu {
      */
     private void savePNG() throws IOException {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Choissisez votre nom de fichier PNG : ");
+        System.out.println("Choissisez votre nom de fichier PNG ou le chemin ou vous voulez enregistrer : ");
         String namePNG = scan.next();
         this.tree.savePNG(namePNG);
     }
