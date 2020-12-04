@@ -5,32 +5,38 @@ import java.util.Scanner;
 
 public class Menu {
 
+    //TODO faire chargement delta save txt et phi
+    // TODO signtures fonction commentaring
+    //TODO afficher abrbre et les 3 menus bien
+    //TODO expliquer eqm dans le meu, faire saut a la ligne pour que ce soit propre
+
     public static final String RED   = "\033[0;31m"; //Color red
     public static final String GREEN = "\033[0;32m"; //Color green
     public static final String RESET = "\033[0m";  //Reset color
 
     private final ArrayList<String> listMenu;
-    private boolean compressMenu, saveMenu, isCompress;
+    private boolean compressMenu, saveMenu, comparator, isCompress;
     private QuadTree tree;
 
     //Constructor
     public Menu() {
 
         this.compressMenu = false;
-        this.saveMenu = false;
-        this.isCompress = false;
+        this.saveMenu     = false;
+        this.isCompress   = false;
+        this.comparator   = false;
 
-        this.listMenu = new ArrayList<>();
+        this.listMenu     = new ArrayList<>();
 
-        this.tree = null;
+        this.tree         = null;
 
     }
 
     //---------------------------------------- INTERACTIVE MODE
 
-    /**
+    /** @role
+     *
      * @throws IOException
-     * @role :
      */
     public void startProgramme() throws IOException {
 
@@ -58,9 +64,9 @@ public class Menu {
         }
     }
 
-    /**
-     * @throws IOException
-     * @role : This function enables
+    /** @role   This function enables
+     *
+     *  @throws IOException
      */
     private void programmeError() throws IOException {
         try {
@@ -79,7 +85,45 @@ public class Menu {
     }
 
 
-    //TODO voir si on eut sans appuyer sur la touche entrer selectionner une option !!
+    /** @role
+     *
+     *  @throws IOException
+     */
+    private void createMenu() throws IOException {
+
+        if (this.compressMenu && !this.saveMenu && !this.comparator) {
+            listMenu.add("\n************************************* MENU *************************************\n\n");
+            listMenu.add("\t 0. Quitter le programme.\n");
+            listMenu.add("\t 1. Recharger une image PNG en mémoire dans un quadtree.\n");
+            listMenu.add("\t 2. Appliquer une compression Delta pour un ∆ donné.\n");
+            listMenu.add("\t 3. Appliquer une compression Phi pour un Φ donné.\n");
+            listMenu.add("\n\t A. Afficher à l'écran l'arbre.\n");
+
+        } else if (this.compressMenu && this.saveMenu && !this.comparator && this.listMenu.size() < 8 ) {
+            listMenu.remove(5);
+            listMenu.add("\t 4. Sauvegarder le quadtree dans un fichier PNG.\n");
+            listMenu.add("\t 5. Sauvegarder la représentation textuelle du quadtree dans un fichier TXT.\n");
+            listMenu.add("\n\t A. Afficher à l'écran l'arbre.\n");
+
+        } else if (this.compressMenu && this.saveMenu && this.comparator && this.listMenu.size() < 9) {
+            listMenu.remove(7);
+            listMenu.add("\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n");
+            listMenu.add("\t A. Afficher à l'écran l'arbre.\n");
+        }
+    }
+
+    /** @role
+     *
+     * @param
+     */
+    private void displayMenu() {
+        for (String option : this.listMenu) {
+            System.out.print(option);
+        }
+    }
+
+
+
 
     /** @role
      *
@@ -89,7 +133,7 @@ public class Menu {
         System.out.println("\n→ A présent, choissisez quelle option vous intérresse.");
 
         Scanner scanner = new Scanner(System.in);
-        String choice = scanner.next();// TODO verifier qu'on entre bien un int
+        String choice = scanner.next();
 
         switch (choice) {
             case "0":
@@ -110,6 +154,7 @@ public class Menu {
                 break;
             case "4":
                 savePNG();
+                this.comparator = true;
                 break;
             case "5":
                 saveTXT();
@@ -117,15 +162,19 @@ public class Menu {
             case "6":
                 displayEQM(this.tree);
                 break;
+            case "A":
+                System.out.println("\nArbre : \n");
+                System.out.println(this.tree.toString());
+                break;
             default:
                 System.out.println(RED + "/!\\ ERREUR : Entrée invalide, veuillez refaire votre choix." + RESET);
                 choiceOption();
         }
-
         startProgramme();
     }
 
-    /**
+
+    /** @role
      *
      */
     private void exit() {
@@ -239,37 +288,6 @@ public class Menu {
         startProgramme();
     }
 
-    /** @role
-     *
-     * @throws IOException
-     */
-    private void createMenu() throws IOException {
-
-        if (this.compressMenu && !this.saveMenu) {
-            listMenu.add("\n************************************* MENU *************************************\n\n");
-            listMenu.add("\t 0. Quitter le programme.\n");
-            listMenu.add("\t 1. Recharger une image PNG en mémoire dans un quadtree.\n");
-            listMenu.add("\t 2. Appliquer une compression Delta pour un ∆ donné.\n");
-            listMenu.add("\t 3. Appliquer une compression Phi pour un Φ donné.\n");
-            listMenu.add("\n\t A. Afficher à l'écran l'arbre.\n");
-        } else if (this.compressMenu && this.saveMenu && this.listMenu.size() < 7) {
-            listMenu.remove(5);
-            listMenu.add("\t 4. Sauvegarder le quadtree dans un fichier PNG.\n");
-            listMenu.add("\t 5. Sauvegarder la représentation textuelle du quadtree dans un fichier TXT.\n");
-            listMenu.add("\t 6. Donner les mesures comparative de deux fichiers images PNG.\n\n");
-            listMenu.add("\t A. Afficher à l'écran l'arbre.\n");
-        }
-    }
-
-    /** @role
-     *
-     * @param
-     */
-    private void displayMenu() {
-        for (String option : this.listMenu) {
-            System.out.print(option);
-        }
-    }
 
 
     //---------------------------------------- NON INTERACTIVE MODE
@@ -281,12 +299,9 @@ public class Menu {
     public void noInteractiveProgramme(String[] args) throws IOException {
         createDeltaFile(Integer.parseInt(args[1]), args[0], args[0]);
         createPhiFile(Integer.parseInt(args[2]), args[0], args[0]);
-
-
     }
 
     //---------------------------------------- CREATE FILE
-    ///TODO BLOQUER DELTA ENTRE 0 ET 254 !!!!!!!!!!!!!!!!!!!!!!!!!
 
     /** @role
      *  @param delta
@@ -304,8 +319,6 @@ public class Menu {
         System.out.print("\n Comparaison fichiers Delta : ");
         displayEQM(deltaTree);
     }
-
-    ///TODO PHI > 0 !!!!!!!!!!!!!!!!!!!!!!!!!
 
     /**
      * @param phi

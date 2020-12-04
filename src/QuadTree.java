@@ -179,7 +179,7 @@ public class QuadTree {
 
     // ----------------------------------------------- TO STRING -----------------------------------------------
 
-    /** @role : Display tree in docs format.
+    /** @role Display tree in docs format.
      *
      *  @return display in format String.
      */
