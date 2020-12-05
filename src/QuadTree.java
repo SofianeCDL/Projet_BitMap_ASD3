@@ -396,7 +396,7 @@ public class QuadTree {
      *  @throws IOException Exception if the file or path does not exist.
      */
     public void savePNG(String filename) throws IOException {
-        ImagePNG image = Main.loadImagePNG(this.imagePath);
+        ImagePNG image = Menu.loadImagePNG(this.imagePath);
          this.compressImagePath = constructionPathCompress(filename);
 
         this.compressionPNG(image, this, 0, 0, image.width());
@@ -475,7 +475,7 @@ public class QuadTree {
      *  @throws IOException Exception if the path or image does not exist.
      */
     public void EQM() throws IOException {
-        ImagePNG imageOrigine = Main.loadImagePNG(this.imagePath);
+        ImagePNG imageOrigine = Menu.loadImagePNG(this.imagePath);
         ImagePNG imageCompress = new ImagePNG(this.compressImagePath);
 
         File imageOrigineFile    =    new File(this.imagePath);
