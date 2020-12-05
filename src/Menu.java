@@ -68,7 +68,7 @@ public class Menu {
                         "→ Nous vous invitons à charger une image (indiquez le nom du fichier ou chemin d'accès du fichier) en mémoire pour acceder au menu.\nNous vous souhaitons une bonne découverte !\n");
 
                 Scanner scan = new Scanner(System.in);
-                String imagePath = scan.next(); //we scan the user's keyboard input
+                String imagePath = scan.nextLine(); //we scan the user's keyboard input
 
                 //TODO préciser dans le readMe soit indiquer chemin (mettre exemple) soit juste le nom de l'image si elle se trouve dans pngs
                 this.tree = new QuadTree(imagePath);
@@ -98,7 +98,7 @@ public class Menu {
             System.out.println("\n→ Nous vous invitons à re-donner le nom de votre image pour acceder au menu.");
             Scanner scan = new Scanner(System.in);
 
-            String imagePath = scan.next();
+            String imagePath = scan.nextLine();
             this.tree = new QuadTree(imagePath); //We load image.
 
         } catch (IOException e) {
@@ -153,7 +153,7 @@ public class Menu {
         System.out.println("\n→ A présent, choissisez quelle option vous intérresse.");
 
         Scanner scanner = new Scanner(System.in);
-        String choice = scanner.next();
+        String choice = scanner.nextLine();
 
         switch (choice) {
             case "0": //exit the program
@@ -217,36 +217,6 @@ public class Menu {
         System.exit(0);
 
     }
-
-
-
-    /*public static void loadImage(boolean b) throws IOException {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.println("Veuillez entrer le nom ou le chemin de votre fichier à sauvegarder.");
-        ///TODO EXPCETION VERIF BON NOM DE FICHIER +
-        ///TODO VOIR SI ON APPELLE CETTE FONCTION DANS LE MODE NN INTERACTIF
-
-        try {
-            String fileName = scan.next();
-
-            tree = new QuadTree(fileName);
-
-            System.out.println("\nAFFICHAGE ARBRE DE LA PHOTO : " + fileName + "\n" );
-            b = true;
-            System.out.println(tree.toString());
-
-        }
-        catch(Exception e ){
-            System.out.println("Le nom du fichier est incorrect ! ");
-
-            throw e;
-        } finally {
-            if(b == false ){
-                loadImage(b);
-            }
-        }
-    }*/
 
     //---------------------------------------- COMPRESSION
     /** @role the function requests an integer to performs a delta compression corresponding to the input caught by the scanner.
@@ -314,7 +284,7 @@ public class Menu {
     private void savePNG() throws IOException {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choissisez votre nom de fichier PNG ou le chemin ou vous voulez enregistrer : ");
-        String namePNG = scan.next();
+        String namePNG = scan.nextLine();
         this.tree.savePNG(namePNG);
     }
 
@@ -325,7 +295,7 @@ public class Menu {
     private void saveTXT() throws IOException {
         Scanner scan = new Scanner(System.in);
         System.out.println("Choissisez votre nom de fichier TXT : ");
-        String nameTXT = scan.next();
+        String nameTXT = scan.nextLine();
         this.tree.saveTXT("SaveTXT/" + nameTXT + ".txt");
         startProgramme();
     }
@@ -361,7 +331,7 @@ public class Menu {
      *  @return ImagePNG
      */
     public static ImagePNG loadImagePNG(String imagePath) throws IOException {
-        if (imagePath.contains("/")) {
+        if (imagePath.contains("\\")) {
             return new ImagePNG(imagePath);
         } else if (imagePath.contains(".png")) {
             return new ImagePNG("pngs/" + imagePath);

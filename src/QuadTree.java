@@ -494,7 +494,7 @@ public class QuadTree {
      */
     private String constructionPath(String path) {
 
-        if (!path.contains("/") && !path.contains(".png")) {
+        if (!path.contains("\\") && !path.contains(".png")) {
             return "pngs/" + path + ".png";
         } else if (!path.contains("/")){
             return "pngs/" + path;
@@ -504,7 +504,7 @@ public class QuadTree {
     }
     private String constructionPathCompress(String path) {
 
-        if (!path.contains("/") && !path.contains(".png")) {
+        if (!path.contains("\\") && !path.contains(".png")) {
             return "SavePNG/" + path + ".png";
         } else if (!path.contains("/")){
             return "SavePNG/" + path;
