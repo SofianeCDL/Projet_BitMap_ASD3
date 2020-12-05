@@ -15,7 +15,7 @@ public class Menu {
     public static final String RESET = "\033[0m";  //Reset color
 
     private final ArrayList<String> listMenu;
-    private boolean compressMenu, saveMenu, comparator, isCompress;
+    private boolean compressMenu, saveMenu, comparator;
     private QuadTree tree;
 
     //Constructor
@@ -23,7 +23,6 @@ public class Menu {
 
         this.compressMenu = false;
         this.saveMenu     = false;
-        this.isCompress   = false;
         this.comparator   = false;
 
         this.listMenu     = new ArrayList<>();
@@ -183,34 +182,6 @@ public class Menu {
 
     }
 
-    /*public static void loadImage(boolean b) throws IOException {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.println("Veuillez entrer le nom ou le chemin de votre fichier à sauvegarder.");
-        ///TODO EXPCETION VERIF BON NOM DE FICHIER +
-        ///TODO VOIR SI ON APPELLE CETTE FONCTION DANS LE MODE NN INTERACTIF
-
-        try {
-            String fileName = scan.next();
-
-            tree = new QuadTree(fileName);
-
-            System.out.println("\nAFFICHAGE ARBRE DE LA PHOTO : " + fileName + "\n" );
-            b = true;
-            System.out.println(tree.toString());
-
-        }
-        catch(Exception e ){
-            System.out.println("Le nom du fichier est incorrect ! ");
-
-            throw e;
-        } finally {
-            if(b == false ){
-                loadImage(b);
-            }
-        }
-    }*/
-
     /**
      *
      */
@@ -249,7 +220,7 @@ public class Menu {
 
         try {
             phi = scan.nextInt();
-            while (phi < 0 || phi > 255) {
+            while (phi < 0) {
                 System.out.println(RED + "/!\\ ERREUR : Entrée invalide, veuillez re-donner un phi." + RESET);
                 phi = scan.nextInt();
             }

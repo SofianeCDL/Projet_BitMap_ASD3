@@ -169,9 +169,9 @@ public class QuadTree {
 
     // ----------------------------------------------- VERIFICATION -----------------------------------------------
 
-    /** @role
+    /** @role checking if the node is a father of 4 leaves and if it is not a leaf.
      *
-     *  @return
+     *  @return boolean
      */
     public boolean verificationBound() {
         return !this.isLeaf() && this.getNorthEast().isLeaf() && this.getNorthWest().isLeaf() && this.getSouthWest().isLeaf() && this.getSouthEast().isLeaf();
@@ -237,10 +237,10 @@ public class QuadTree {
         return Math.max(maxNorth, maxSouth);
     }
 
-    /** @role
+    /** @role Calculate the maximum colorimetric for a father of 4 leaves.
      *
-     * @param delta
-     * @param tree
+     *  @param delta limit value of the colorimetric difference.
+     *  @param tree Father of 4 sheets to calculate the maximum colorimetric difference.
      */
     private void maxColorimetricDifference(int delta, QuadTree tree) {
         int colorimetricDifference = tree.maxColorimetricDifference();
@@ -262,17 +262,17 @@ public class QuadTree {
 
     // ----------------------------------------------- COMPRESS DELTA -----------------------------------------------
 
-    /** @role
+    /** @role call version of compressDelta for the menu.
      *
-     * @param delta
+     *  @param delta limit value of the colorimetric difference.
      */
     public void compressDelta(int delta) {
         compressDelta(delta, this);
     }
-    /** @role
+    /** @role Go through the tree and compress if the colorimetric interpretation is lower than the delta.
      *
-     *  @param delta
-     *  @param tree
+     *  @param delta limit value of the colorimetric difference.
+     *  @param tree Shaft to compress
      */
     private void compressDelta(int delta, QuadTree tree) {
 
@@ -397,7 +397,7 @@ public class QuadTree {
      */
     public void savePNG(String filename) throws IOException {
         ImagePNG image = Main.loadImagePNG(this.imagePath);
-         this.compressImagePath = constructionPath(filename);
+         this.compressImagePath = constructionPathCompress(filename);
 
         this.compressionPNG(image, this, 0, 0, image.width());
 
@@ -498,6 +498,16 @@ public class QuadTree {
             return "pngs/" + path + ".png";
         } else if (!path.contains("/")){
             return "pngs/" + path;
+        } else {
+            return path;
+        }
+    }
+    private String constructionPathCompress(String path) {
+
+        if (!path.contains("/") && !path.contains(".png")) {
+            return "SavePNG/" + path + ".png";
+        } else if (!path.contains("/")){
+            return "SavePNG/" + path;
         } else {
             return path;
         }

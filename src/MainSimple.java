@@ -1,3 +1,4 @@
+import java.io.Console;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.TreeSet;
@@ -76,12 +77,13 @@ public class MainSimple {
 
 
 
-        /*long dep = System.currentTimeMillis();
         QuadTree t = new QuadTree("1024-cube");
+        long dep = System.currentTimeMillis();
         t.compressPhi(100);
+        System.out.println((System.currentTimeMillis() - dep) / 1000.0);
         t.savePNG("SavePNG/test.png");
         t.EQM();
-        System.out.println((System.currentTimeMillis() - dep) / 1000.0);*/
+        System.out.println((System.currentTimeMillis() - dep) / 1000.0);
         //t.savePNG("SavePNG/test.png");
 
 
@@ -200,4 +202,6 @@ public class MainSimple {
 
 
     }
+
+
 }
