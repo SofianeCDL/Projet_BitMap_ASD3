@@ -173,14 +173,26 @@ public class Menu {
                 compressPhi();
                 break;
             case "4": //Save a image in PNG
-                savePNG();
-                this.comparator = true;
+                if (saveMenu) {
+                    savePNG();
+                    this.comparator = true;
+                } else {
+                    problemmeChoice();
+                }
                 break;
             case "5": //Save a image in TXT
-                saveTXT();
+                if (saveMenu) {
+                    saveTXT();
+                } else {
+                    problemmeChoice();
+                }
                 break;
             case "6": //Compare the gap between 2 trees
-                displayEQM(this.tree);
+                if (this.saveMenu && this.comparator) {
+                    displayEQM(this.tree);
+                } else {
+                    problemmeChoice();
+                }
                 break;
             case "A": //Display tree
                 System.out.println("\nArbre : \n");
@@ -191,6 +203,11 @@ public class Menu {
                 choiceOption();
         }
         startProgramme();
+    }
+
+    private void problemmeChoice() throws IOException {
+        System.out.println(RED + "/!\\ ERREUR : Le choix est incorrect ! " + RESET);
+        choiceOption();
     }
 
 

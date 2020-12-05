@@ -34,7 +34,7 @@ public class QuadTree {
 
         this.imagePath          = constructionPath(imagePath);
 
-        ImagePNG image          = Main.loadImagePNG(imagePath);
+        ImagePNG image          = Menu.loadImagePNG(imagePath);
 
         this.compressImagePath  = imagePath;
 
