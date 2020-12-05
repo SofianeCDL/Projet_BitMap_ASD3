@@ -71,19 +71,19 @@ public class MainSimple {
     public static void main(String[] args) throws Exception {
 
         Menu m = new Menu();
-        m.startProgramme();
+        m.programm(args);
 
 
 
 
 
-        QuadTree t = new QuadTree("1024-cube");
+        /*QuadTree t = new QuadTree("1024-cube");
         long dep = System.currentTimeMillis();
         t.compressPhi(100);
         System.out.println((System.currentTimeMillis() - dep) / 1000.0);
         t.savePNG("SavePNG/test.png");
         t.EQM();
-        System.out.println((System.currentTimeMillis() - dep) / 1000.0);
+        System.out.println((System.currentTimeMillis() - dep) / 1000.0);*/
         //t.savePNG("SavePNG/test.png");
 
 

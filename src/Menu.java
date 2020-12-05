@@ -331,7 +331,7 @@ public class Menu {
 
         System.out.println("\nCréation des fichiers \n"
                 + "DELTA : SaveTXT/" + args[0] + "-delta" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-delta" + delta + ".png"
-                + "PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " + "SavePNG/" + args[0] + "-phi" + phi + ".png");
+                + " - PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " + "SavePNG/" + args[0] + "-phi" + phi + ".png");
 
         createDeltaFile(delta, args[0], args[0]); //creation of delta PNG and text files.
         createPhiFile(phi, args[0], args[0]); //creation of phi PNG and text files.
