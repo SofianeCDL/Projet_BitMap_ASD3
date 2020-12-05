@@ -6,9 +6,9 @@ import java.util.Scanner;
 public class Menu {
 
     //TODO faire chargement delta save txt et phi
-    // TODO signtures fonction commentaring
+    // TODO LOU : signature fonction commentaring
     //TODO afficher abrbre et les 3 menus bien
-    //TODO expliquer eqm dans le meu, faire saut a la ligne pour que ce soit propre
+    //TODO expliquer eqm dans le meu, faire saut à la ligne pour que ce soit propre
 
     public static final String RED   = "\033[0;31m"; //Color red
     public static final String GREEN = "\033[0;32m"; //Color green
@@ -31,64 +31,89 @@ public class Menu {
 
     }
 
+    //---------------------------------------- START PROGRAMM
+    /** @role This function catch if in terminal we have argument. If we don't have argument,
+     * programm() starts interractive mode, else, starts non interractive mode.
+     *
+     * @param args
+     * @throws Exception catch a global error.
+     * */
+    public void programm(String[] args) throws Exception {
+
+        //Begin
+        if ( args.length == 0 ) { //If we are in interactive mode.
+            startProgramme();
+
+        } else if ( args.length == 3 ) { //If we are in noninteractive mode.
+            noInteractiveProgramme(args);
+
+        } else {
+            throw new Exception("Le nombre d'argument n'est pas le bon ! ");
+        }
+    }
+
     //---------------------------------------- INTERACTIVE MODE
 
-    /** @role
+    /** @role This function starts programm. The goal is to display the introductory sentence before any operation
+     * and it scans the input (name of the image) to starts programm.
      *
-     * @throws IOException
+     * @throws IOException catch a global input or output error.
      */
     public void startProgramme() throws IOException {
 
         createMenu();
-        if (!this.compressMenu && !this.saveMenu) {
+        if (!this.compressMenu && !this.saveMenu) { //compressMenu and saveMenu they are not unlocked
             try {
                 System.out.println("Bonjour, bienvenue dans notre outil de compression d'image !\n" +
                         "→ Nous vous invitons à charger une image (indiquez le nom du fichier ou chemin d'accès du fichier) en mémoire pour acceder au menu.\nNous vous souhaitons une bonne découverte !\n");
 
-                Scanner scan = new Scanner(System.in);//we scan the user's keyboard input
-                String imagePath = scan.next();
+                Scanner scan = new Scanner(System.in);
+                String imagePath = scan.next(); //we scan the user's keyboard input
 
                 //TODO préciser dans le readMe soit indiquer chemin (mettre exemple) soit juste le nom de l'image si elle se trouve dans pngs
                 this.tree = new QuadTree(imagePath);
-                this.compressMenu = true;
+                this.compressMenu = true;//So, we can access the menu.
+
                 startProgramme();
+
             } catch (IOException e) {
                 System.out.println(RED + "/!\\ ERREUR : Le nom du fichier est incorrect ! " + RESET);
-                programmeError();
+                programmeError(); //This error the error is processed in the called function.
                 throw e;
             }
+
         } else {
             displayMenu();
             choiceOption();
         }
     }
 
-    /** @role   This function enables
+    /** @role Serves as an error case when launching the menu. If the user enter Serves as an error case when launching the menu,
+     * this function it will deal with the problem and ask until the user enters a correct name.
      *
-     *  @throws IOException
+     *  @throws IOException catch a global input or output error.
      */
     private void programmeError() throws IOException {
         try {
             System.out.println("\n→ Nous vous invitons à re-donner le nom de votre image pour acceder au menu.");
             Scanner scan = new Scanner(System.in);
+
             String imagePath = scan.next();
-            this.tree = new QuadTree(imagePath);
+            this.tree = new QuadTree(imagePath); //We load image.
 
         } catch (IOException e) {
             System.out.println(RED + "/!\\ ERREUR : Le nom du fichier est incorrect ! " + RESET);
-            programmeError();
+            programmeError(); //if the error persists
             throw e;
         }
-            this.compressMenu = true;
-            startProgramme();
+        this.compressMenu = true;
+        startProgramme();
     }
 
 
-    /** @role
-     *
-     *  @throws IOException
-     */
-    private void createMenu() throws IOException {
+    /** @role Some of the functions cannot be performed without some being done first.
+     * It displays the functions that can be performed and blocks the others. */
+    private void createMenu(){
 
         if (this.compressMenu && !this.saveMenu && !this.comparator) {
             listMenu.add("\n************************************* MENU *************************************\n\n");
@@ -111,10 +136,7 @@ public class Menu {
         }
     }
 
-    /** @role
-     *
-     * @param
-     */
+    /** @role Display the menu into console. */
     private void displayMenu() {
         for (String option : this.listMenu) {
             System.out.print(option);
@@ -123,10 +145,9 @@ public class Menu {
 
 
 
-
-    /** @role
+    /** @role from the user's choices, the function performs the correct calculations and displays the correct display, then it recalls the menu.
      *
-     * @throws IOException
+     * @throws IOException catch a global input or output error.
      */
     private void choiceOption() throws IOException {
         System.out.println("\n→ A présent, choissisez quelle option vous intérresse.");
@@ -135,37 +156,37 @@ public class Menu {
         String choice = scanner.next();
 
         switch (choice) {
-            case "0":
+            case "0": //exit the program
                 exit();
                 break;
-            case "1":
+            case "1": //Load another image
                 this.compressMenu = false;
                 this.saveMenu = false;
                 startProgramme();
                 break;
-            case "2":
+            case "2": //Compress with delta
                 this.saveMenu = true;
                 compressDelta();
                 break;
-            case "3":
+            case "3": //Compress with phi
                 this.saveMenu = true;
                 compressPhi();
                 break;
-            case "4":
+            case "4": //Save a image in PNG
                 savePNG();
                 this.comparator = true;
                 break;
-            case "5":
+            case "5": //Save a image in TXT
                 saveTXT();
                 break;
-            case "6":
+            case "6": //Compare the gap between 2 trees
                 displayEQM(this.tree);
                 break;
-            case "A":
+            case "A": //Display tree
                 System.out.println("\nArbre : \n");
                 System.out.println(this.tree.toString());
                 break;
-            default:
+            default: //Invamide input
                 System.out.println(RED + "/!\\ ERREUR : Entrée invalide, veuillez refaire votre choix." + RESET);
                 choiceOption();
         }
@@ -173,17 +194,48 @@ public class Menu {
     }
 
 
-    /** @role
-     *
-     */
+    /** @role To finish the programm */
     private void exit() {
         System.out.println(GREEN + "\nMerci, au revoir et à la prochaîne !\n" + RESET);
         System.exit(0);
 
     }
 
-    /**
+
+
+    /*public static void loadImage(boolean b) throws IOException {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println("Veuillez entrer le nom ou le chemin de votre fichier à sauvegarder.");
+        ///TODO EXPCETION VERIF BON NOM DE FICHIER +
+        ///TODO VOIR SI ON APPELLE CETTE FONCTION DANS LE MODE NN INTERACTIF
+
+        try {
+            String fileName = scan.next();
+
+            tree = new QuadTree(fileName);
+
+            System.out.println("\nAFFICHAGE ARBRE DE LA PHOTO : " + fileName + "\n" );
+            b = true;
+            System.out.println(tree.toString());
+
+        }
+        catch(Exception e ){
+            System.out.println("Le nom du fichier est incorrect ! ");
+
+            throw e;
+        } finally {
+            if(b == false ){
+                loadImage(b);
+            }
+        }
+    }*/
+
+    //---------------------------------------- COMPRESSION
+    /** @role the function requests an integer to performs a delta compression corresponding to the input caught by the scanner.
      *
+     *  @throws InputMismatchException captures if the user's input is not the correct type of input expected.
+     *  @throws IOException catch a global input or output error.
      */
     public void compressDelta() throws InputMismatchException, IOException {
         Scanner scan = new Scanner(System.in);
@@ -198,19 +250,21 @@ public class Menu {
                 delta = scan.nextInt();
             }
 
-            this.tree.compressDelta(delta);//We applied compression
+            this.tree.compressDelta(delta);//We applied compression.
 
         } catch (InputMismatchException eDelta) {
             System.out.println(RED + "/!\\ ERREUR : Il faut un entier entre 0 et 255 ! " + RESET);
-            compressDelta();
+            compressDelta(); //While the error persist, we restrat the function.
             throw eDelta;
         }
         startProgramme();
     }
 
 
-    /** @role
+    /** @role the function requests an integer to performs a phi compression corresponding to the input caught by the scanner.
      *
+     * @throws InputMismatchException captures if the user's input is not the correct type of input expected.
+     * @throws IOException catch a global input or output error.
      */
     public void compressPhi() throws InputMismatchException, IOException {
         Scanner scan = new Scanner(System.in);
@@ -220,25 +274,25 @@ public class Menu {
 
         try {
             phi = scan.nextInt();
-            while (phi < 0) {
+            while (phi < 0 || phi > 255) {
                 System.out.println(RED + "/!\\ ERREUR : Entrée invalide, veuillez re-donner un phi." + RESET);
                 phi = scan.nextInt();
             }
 
-            this.tree.compressPhi(phi);//We applied compression
+            this.tree.compressPhi(phi); //We applied compression.
 
-        } catch (InputMismatchException ePhi) {
+        } catch (InputMismatchException ePhi) { //We caught an error.
             System.out.println(RED + "/!\\ ERREUR : Il faut un entier strictement supérieur à 0 ! " + RESET);
-            compressPhi();
+            compressPhi(); //While the error persist, we restrat the function.
             throw ePhi;
         }
         startProgramme();
     }
 
 
-    /** @role
+    /** @role Save a compressed image in PNG file.
      *
-     *  @throws IOException
+     *  @throws IOException catch a global input or output error.
      */
     private void savePNG() throws IOException {
         Scanner scan = new Scanner(System.in);
@@ -247,9 +301,9 @@ public class Menu {
         this.tree.savePNG(namePNG);
     }
 
-    /** @role
+    /** @role Save a compressed tree in TXT file.
      *
-     *  @throws IOException
+     *  @throws IOException catch a global input or output error.
      */
     private void saveTXT() throws IOException {
         Scanner scan = new Scanner(System.in);
@@ -263,22 +317,50 @@ public class Menu {
 
     //---------------------------------------- NON INTERACTIVE MODE
     /** @role
-     * @param args
-     * @throws IOException
      *
+     *  @param args
+     *  @throws Exception catch a global error.
      */
-    public void noInteractiveProgramme(String[] args) throws IOException {
-        createDeltaFile(Integer.parseInt(args[1]), args[0], args[0]);
-        createPhiFile(Integer.parseInt(args[2]), args[0], args[0]);
+    public void noInteractiveProgramme(String[] args) throws Exception {
+
+        System.out.println("Chargement de l'image...");
+        ImagePNG i = loadImagePNG(args[0]); //TODO VERIFIER EXCEPTION BON NOM DE FICHIER
+
+        int delta = Integer.parseInt(args[1]);
+        int phi = Integer.parseInt(args[2]);
+
+        System.out.println("\nCréation des fichiers \n"
+                + "DELTA : SaveTXT/" + args[0] + "-delta" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-delta" + delta + ".png"
+                + "PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " + "SavePNG/" + args[0] + "-phi" + phi + ".png");
+
+        createDeltaFile(delta, args[0], args[0]); //creation of delta PNG and text files.
+        createPhiFile(phi, args[0], args[0]); //creation of phi PNG and text files.
+    }
+
+
+    /** @role
+     *
+     *  @param imagePath
+     *  @throws IOException catch a global input or output error.
+     *  @return
+     */
+    public ImagePNG loadImagePNG(String imagePath) throws IOException {
+        if (imagePath.contains("/")) {
+            return new ImagePNG(imagePath);
+        } else if (imagePath.contains(".png")) {
+            return new ImagePNG("pngs/" + imagePath);
+        } else {
+            return new ImagePNG("pngs/" + imagePath + ".png");
+        }
     }
 
     //---------------------------------------- CREATE FILE
-
-    /** @role
-     *  @param delta
-     *  @param name
-     *  @param imagePath
-     *  @throws IOException
+    /** @role This function create delta PNG and text files.
+     *
+     *  @param delta compression index.
+     *  @param name name of the future image.
+     *  @param imagePath path of the future image.
+     *  @throws IOException catch a global input or output error.
      */
     private void createDeltaFile(int delta, String name, String imagePath) throws IOException {
         QuadTree deltaTree = new QuadTree(imagePath);
@@ -291,11 +373,13 @@ public class Menu {
         displayEQM(deltaTree);
     }
 
-    /**
-     * @param phi
-     * @param name
-     * @param imagePath
-     * @throws IOException
+
+    /** @role This function create phi PNG and text files.
+     *
+     * @param phi compression index.
+     * @param name name of the future image.
+     * @param imagePath  path of the future image.
+     * @throws IOException catch a global input or output error.
      */
     private void createPhiFile(int phi, String name, String imagePath) throws IOException {
         QuadTree phiTree = new QuadTree(imagePath);
@@ -309,29 +393,13 @@ public class Menu {
 
     }
 
-    /**
-     * @param tree
-     * @throws IOException
-     * @role :
+    /** @role Calculate and display EQM.
+     *
+     *  @param tree Tree comparared against.
+     *  @throws IOException catch a global input or output error.
      */
     public void displayEQM(QuadTree tree) throws IOException {
         tree.EQM();
-    }
-
-    /**
-     * @param imagePath
-     * @return
-     * @throws IOException
-     * @role :
-     */
-    public ImagePNG loadImagePNG(String imagePath) throws IOException {
-        if (imagePath.contains("/")) {
-            return new ImagePNG(imagePath);
-        } else if (imagePath.contains(".png")) {
-            return new ImagePNG("pngs/" + imagePath);
-        } else {
-            return new ImagePNG("pngs/" + imagePath + ".png");
-        }
     }
 
 
