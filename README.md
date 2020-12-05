@@ -3,6 +3,7 @@
 Projet de compression d'image de taille 2^n * 2^n de coter. Le principe est d'enregistrer recusirvement tous les pixels dans un arbre quadratique, pour cela nous découpons l'image en 4 et pointons chaque branche un coin découpé, ainsi de suite. 
 
 # DEMARRAGE
+Le fichier .zip contient deux dossier, l'un avec les fichiers .java non compilés et l'autre avec l'exécutable .jar. Les deux dossiers contiennent déjà les fichiers "pngs", "SavePNG" et "SaveTXT", important pour la bonne exécution du code.
 
 # mode non interactif
 windows : Ouvrir ou placer vous avec une fenêtre  PowerShell dans le dossier qui contient Projet_BitMap_ASD3.jar. Lancer la commande "java -jar .\Projet_BitMap_ASD3.jar 'chemin ou nom de l'image**' 'valeur delta' 'valeur phi'".
