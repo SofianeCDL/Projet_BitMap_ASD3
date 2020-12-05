@@ -35,7 +35,7 @@ public class Menu {
     /** @role This function catch if in terminal we have argument. If we don't have argument,
      * programm() starts interractive mode, else, starts non interractive mode.
      *
-     * @param args
+     * @param args It catch argument in the main class.
      * @throws Exception catch a global error.
      * */
     public void programm(String[] args) throws Exception {
@@ -316,35 +316,34 @@ public class Menu {
 
 
     //---------------------------------------- NON INTERACTIVE MODE
-    /** @role
+    /** @role This function starts non interactive mode.
      *
-     *  @param args
+     *  @param args It catch argument in terminal.
      *  @throws Exception catch a global error.
      */
     public void noInteractiveProgramme(String[] args) throws Exception {
 
         System.out.println("Chargement de l'image...");
-        ImagePNG i = loadImagePNG(args[0]); //TODO VERIFIER EXCEPTION BON NOM DE FICHIER
 
         int delta = Integer.parseInt(args[1]);
         int phi = Integer.parseInt(args[2]);
 
         System.out.println("\nCréation des fichiers \n"
                 + "DELTA : SaveTXT/" + args[0] + "-delta" + delta + ".txt" + " et " + "SavePNG/" + args[0] + "-delta" + delta + ".png"
-                + " - PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " + "SavePNG/" + args[0] + "-phi" + phi + ".png");
+                + " PHI :   SaveTXT/ " + args[0] + "-phi" + phi + ".txt" + " et " + "SavePNG/" + args[0] + "-phi" + phi + ".png");
 
         createDeltaFile(delta, args[0], args[0]); //creation of delta PNG and text files.
         createPhiFile(phi, args[0], args[0]); //creation of phi PNG and text files.
     }
 
 
-    /** @role
+    /** @role This function load a new image.
      *
-     *  @param imagePath
+     *  @param imagePath path of the future image.
      *  @throws IOException catch a global input or output error.
-     *  @return
+     *  @return ImagePNG
      */
-    public ImagePNG loadImagePNG(String imagePath) throws IOException {
+    public static ImagePNG loadImagePNG(String imagePath) throws IOException {
         if (imagePath.contains("/")) {
             return new ImagePNG(imagePath);
         } else if (imagePath.contains(".png")) {
