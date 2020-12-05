@@ -331,7 +331,7 @@ public class Menu {
      *  @return ImagePNG
      */
     public static ImagePNG loadImagePNG(String imagePath) throws IOException {
-        if (imagePath.contains("\\")) {
+        if (imagePath.contains("\\") || imagePath.contains("/")) {
             return new ImagePNG(imagePath);
         } else if (imagePath.contains(".png")) {
             return new ImagePNG("pngs/" + imagePath);
