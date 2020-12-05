@@ -34,5 +34,5 @@ Une des options de compression permetra de sauvegarder votre image en .png (4) d
 Sauvegarder votre image en png permetra ensuite d'effectuer les mesures comparatives (6) de l'image d'origine avec l'image compresser.
 
 # AUTEURS
-Sofiane COUËDEL : étaudaint en licence 3 Informatique Nantes.
-Lou-Anne SAUVETRE : étaudaint en licence 3 Informatique Nantes.
+Sofiane COUËDEL : étudiant en licence 3 Informatique Nantes.
+Lou-Anne SAUVÊTRE : étudiante en licence 3 Informatique Nantes.
