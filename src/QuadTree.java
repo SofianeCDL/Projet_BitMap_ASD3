@@ -442,7 +442,7 @@ public class QuadTree {
      */
     private void crushPixelPNG(ImagePNG image, int x, int y, int sizeImage, Color rgb) {
         for (int i = x ; i < x + sizeImage ; ++i) {
-            for (int j = y ; j < y + sizeImage ; j++) {
+            for (int j = y ; j < y + sizeImage ; ++j) {
                 image.setPixel(i, j, rgb);
             }
         }
@@ -452,7 +452,7 @@ public class QuadTree {
 
     /** @role Saves the QuadTree in SaveTXT in written form.
      *
-     *  @param location image path.
+     *  @param location txt path (SaveTXT\nameFile.txt).
      */
     public void saveTXT(String location) {
         String quadTreeTXT = this.toString();
@@ -502,6 +502,12 @@ public class QuadTree {
             return path;
         }
     }
+
+    /** @role
+     *
+     *  @param path
+     *  @return
+     */
     private String constructionPathCompress(String path) {
 
         if (!path.contains("\\") && !path.contains(".png")) {

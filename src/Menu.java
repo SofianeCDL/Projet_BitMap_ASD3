@@ -115,7 +115,7 @@ public class Menu {
      * It displays the functions that can be performed and blocks the others. */
     private void createMenu(){
 
-        if (this.compressMenu && !this.saveMenu && !this.comparator) {
+        if (this.compressMenu && !this.saveMenu && !this.comparator && this.listMenu.size() < 5) {
             listMenu.add("\n************************************* MENU *************************************\n\n");
             listMenu.add("\t 0. Quitter le programme.\n");
             listMenu.add("\t 1. Recharger une image PNG en mémoire dans un quadtree.\n");
