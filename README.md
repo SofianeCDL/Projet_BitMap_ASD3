@@ -32,3 +32,7 @@ Il vous sera possible ensuite de choisir de recharger une image (0), de faire un
 Une des options de compression permetra de sauvegarder votre image en .png (4) dans le dossier "SavePNG" fournit avec ou de sauvegarder dans un .txt (5) l'affichage écrit de votre arbre dans le dossier "SaveTXT" fournit avec.
 
 Sauvegarder votre image en png permetra ensuite d'effectuer les mesures comparatives (6) de l'image d'origine avec l'image compresser.
+
+# AUTEURS
+Sofiane COUËDEL : étaudaint en licence 3 Informatique Nantes.
+Lou-Anne SAUVETRE : étaudaint en licence 3 Informatique Nantes.
